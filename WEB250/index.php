@@ -20,6 +20,7 @@
     </main>
 
      <div id="footer"></div>
-    <script src="js/components.js"></script>
+    <?php include('components/header.php'); ?>
+
 </body>
 </html>
