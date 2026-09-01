@@ -6,7 +6,8 @@
 </head>
 
 <body>
-    <div id="header"></div>
+    <?php include('components/header.php'); ?>
+
 
     <main>
         <h2>Contract</h2>
@@ -16,7 +17,7 @@
         </p>
     </main>
 
-     <div id="footer"></div>
-    <script src="js/components.js"></script>
+     <?php include('components/footer.php'); ?>
+
 </body>
 </html>
