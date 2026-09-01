@@ -8,7 +8,8 @@
 <body>
 
 
-       <div id="header"></div>
+       <?php include('components/header.php'); ?>
+
 
     <main>
         <h2>Home</h2>
@@ -19,8 +20,9 @@
         </p>
     </main>
 
-     <div id="footer"></div>
-    <?php include('components/header.php'); ?>
+     <?php include('components/footer.php'); ?>
+
+    
 
 </body>
 </html>
