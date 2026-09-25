@@ -1,143 +1,72 @@
-/* Minimalist Fall Theme */
+/* WEB250 Minimalist Fall Theme */
 
-:root {
-    --background: #F7F1E5;
-    --surface: #FFFDF8;
-    --text: #3D3028;
-    --accent: #B65C32;
-    --accent-dark: #8F4325;
-    --border: #D8C8B8;
-}
-
-/* Page */
 * {
     box-sizing: border-box;
 }
 
 body {
     margin: 0;
-    font-family: "Nunito Sans", sans-serif;
-    background-color: var(--background);
-    color: var(--text);
+    background-color: #F7F1E5;
+    color: #3D3028;
+    font-family: Georgia, "Times New Roman", serif;
     line-height: 1.6;
 }
 
 /* Header */
+
 header {
-    background-color: var(--surface);
-    border-bottom: 2px solid var(--border);
-    padding: 1rem 2rem;
+    background-color: #FFFDF8;
+    border-bottom: 2px solid #D8C8B8;
+    padding: 20px;
 }
 
 header h1 {
     margin: 0;
-    color: var(--text);
+    color: #3D3028;
 }
 
 /* Navigation */
+
 nav {
-    margin-top: 0.5rem;
+    padding: 10px 0;
 }
 
 nav a {
-    color: var(--text);
+    color: #8F4325;
     text-decoration: none;
-    margin-right: 1.5rem;
-    font-weight: 600;
+    margin-right: 20px;
+    font-weight: bold;
 }
 
 nav a:hover {
-    color: var(--accent);
+    color: #B65C32;
 }
 
 /* Main Content */
+
 main {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 2.5rem 1.5rem;
-}
-
-h1,
-h2,
-h3 {
-    color: var(--text);
+    padding: 40px 20px;
 }
 
 h2 {
-    color: var(--accent);
+    color: #B65C32;
 }
 
-p {
-    margin-bottom: 1rem;
-}
-
-/* Links */
 a {
-    color: var(--accent-dark);
+    color: #8F4325;
 }
 
 a:hover {
-    color: var(--accent);
-}
-
-/* Lists */
-ul,
-ol {
-    padding-left: 1.5rem;
-}
-
-/* Buttons */
-button {
-    background-color: var(--accent);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 0.7rem 1rem;
-    font-family: inherit;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: var(--accent-dark);
-}
-
-/* Forms */
-input,
-select,
-textarea {
-    font-family: inherit;
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    padding: 0.6rem;
-    background-color: var(--surface);
-    color: var(--text);
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-    outline: 2px solid var(--accent);
-}
-
-/* Content Sections */
-section {
-    background-color: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
+    color: #B65C32;
 }
 
 /* Footer */
-footer {
-    background-color: var(--surface);
-    border-top: 1px solid var(--border);
-    padding: 1.5rem;
-    text-align: center;
-    margin-top: 2rem;
-}
 
-footer p {
-    margin: 0;
+footer {
+    background-color: #FFFDF8;
+    border-top: 1px solid #D8C8B8;
+    padding: 20px;
+    text-align: center;
 }
