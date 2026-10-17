@@ -5,7 +5,7 @@
         <a href="index.php">Home</a> |
         <a href="introduction.php">Introduction</a> |
         <a href="contract.php">Contract</a> |
-        <a href="index.htm">Multipage Static</a> |
+        <a href="multipage_sites/multipage_sites/superduper_static/index.htm">Multipage Static</a> |
         <a href="superduper_php/index.php">Multipage PHP</a>
     </nav>
 </header>
