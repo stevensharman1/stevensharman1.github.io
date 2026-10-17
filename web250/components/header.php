@@ -6,6 +6,6 @@
         <a href="introduction.php">Introduction</a> |
         <a href="contract.php">Contract</a> |
         <a href="index.htm">Multipage Static</a> |
-        <a href="multipage_php/">Multipage PHP</a>
+        <a href="superduper_php/index.php">Multipage PHP</a>
     </nav>
 </header>
