@@ -1,1 +1,7 @@
+<main>
 
+  <p>This is my personal home page.</p>
+  <a href="WEB250/index.php">Click to go to my WEB250 course.</a>
+   
+</main>
+ 
