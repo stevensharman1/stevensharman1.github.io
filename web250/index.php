@@ -1,4 +1,3 @@
-```php
 <?php
 $page = $_GET['page'] ?? 'home';
 
@@ -57,4 +56,3 @@ switch ($page) {
 
 </body>
 </html>
-```
