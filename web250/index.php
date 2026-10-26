@@ -44,7 +44,7 @@ switch ($page) {
         <a href="index.php?page=contract">Contract</a> |
         <a href="index.php?page=about">About</a> |
         <a href="joyofphp/index.php">Sam's Used Cars</a> |
-        <a href="joyofphp/">Joy of PHPs</a>
+        <a href="joyofphp/home.php">Joy of PHPs</a>
     </nav>
 </header>
 
