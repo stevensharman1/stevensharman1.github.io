@@ -42,24 +42,29 @@ nav a:hover {
     color: #B65C32;
 }
 
-/* Main Content */
-
-main {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 40px 20px;
+/* Main page layout */
+body {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+    font-family: 'Nunito Sans', sans-serif;
 }
 
-h2 {
-    color: #B65C32;
+/* Headings use a secondary font */
+h1, h2, h3 {
+    font-family: Georgia, serif;
 }
 
-a {
-    color: #8F4325;
-}
+/* Responsive layout for smaller screens */
+@media screen and (max-width: 700px) {
+    body {
+        padding: 12px;
+    }
 
-a:hover {
-    color: #B65C32;
+    nav a {
+        display: inline-block;
+        margin: 5px;
+    }
 }
 
 /* Footer */
