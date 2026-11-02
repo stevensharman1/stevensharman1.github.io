@@ -1,23 +1,40 @@
+```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Steven Sharman’s Sneaky Snake ✦ web250 ✦ Home</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="styles/styles.css">
+    <title>Steven Sharman’s Sneaky Snake ✦ web250 ✦ Home</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700&family=Georgia&display=swap" rel="stylesheet">
+
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="styles/default.css">
+
+    <!-- Favicon -->
+    <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+
+    <!-- Accumulus -->
     <script src="https://lint.page/kit/4d0fe3.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
 
-
-       <div id="header"></div>
+    <!-- This div loads the shared header using JavaScript. -->
+    <div id="header"></div>
 
     <main>
         <h2>Home</h2>
+
+        <!-- Inline SVG provides a visual logo for the page. -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" role="img" aria-label="Sneaky Snake logo">
+            <circle cx="50" cy="50" r="45" fill="#a65d36"/>
+            <path d="M25 60 Q35 25 60 45 T75 35" fill="none" stroke="#fff4df" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="70" cy="32" r="3" fill="#fff4df"/>
+        </svg>
 
         <p>
             Welcome to my web250 course site. This folder contains all assignments
@@ -25,9 +42,15 @@
         </p>
     </main>
 
-     <div id="footer"></div>
-    <script src="js/components.js"></script>
+    <!-- This div loads the shared footer using JavaScript. -->
+    <div id="footer"></div>
+
+    <!-- Shared page components -->
+    <script src="scripts/components.js"></script>
+
+    <!-- Vicunadator -->
     <script src="https://divonbriesen.github.io/teaching/tools/standards-check.js" defer></script>
+
 </body>
 </html>
-
+```
