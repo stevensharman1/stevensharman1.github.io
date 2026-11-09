@@ -20,9 +20,17 @@ header {
     padding: 20px;
 }
 
-header h1 {
+/* Headings */
+
+h1 {
+    font-family: Georgia, serif;
     margin: 0;
     color: #3D3028;
+}
+
+h2,
+h3 {
+    font-family: Georgia, serif;
 }
 
 /* Navigation */
@@ -42,32 +50,8 @@ nav a:hover {
     color: #B65C32;
 }
 
-/* Main page layout */
-body {
-    max-width: 1200px;
-    margin: auto;
-    padding: 20px;
-    font-family: 'Nunito Sans', sans-serif;
-}
-
-/* Headings use a secondary font */
-h1, h2, h3 {
-    font-family: Georgia, serif;
-}
-
-/* Responsive layout for smaller screens */
-@media screen and (max-width: 700px) {
-    body {
-        padding: 12px;
-    }
-
-    nav a {
-        display: inline-block;
-        margin: 5px;
-    }
-}
-
 /* Introduction display name */
+
 h6 {
     font-size: 1.5rem;
     white-space: nowrap;
@@ -75,6 +59,7 @@ h6 {
 }
 
 /* Introduction profile photo */
+
 figure {
     margin: 20px 0;
 }
@@ -88,6 +73,7 @@ figcaption {
     font-style: italic;
     margin-top: 8px;
 }
+
 /* Footer */
 
 footer {
@@ -95,4 +81,17 @@ footer {
     border-top: 1px solid #D8C8B8;
     padding: 20px;
     text-align: center;
+}
+
+/* Responsive layout for smaller screens */
+
+@media screen and (max-width: 700px) {
+    body {
+        padding: 12px;
+    }
+
+    nav a {
+        display: inline-block;
+        margin: 5px;
+    }
 }
