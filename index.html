@@ -1,1 +1,160 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Steven Sharman ✦ Personal Homepage</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background-color: #15151e;
+            color: #f5f5fa;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+        }
+
+        header {
+            background-color: #111119;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid #343444;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        main {
+            max-width: 850px;
+            margin: 60px auto;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .hero {
+            padding: 65px 20px;
+            background:
+                linear-gradient(rgba(15, 15, 25, 0.4),
+                rgba(15, 15, 25, 0.65)),
+                url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1800&q=85');
+            background-size: cover;
+            background-position: center;
+            border-radius: 12px;
+            margin-bottom: 40px;
+        }
+
+        .hero h2 {
+            font-size: 2.8rem;
+            margin: 0;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+        }
+
+        .description {
+            color: #d0d0dc;
+            font-size: 1.1rem;
+            margin: 25px auto;
+        }
+
+        .course-link {
+            display: inline-block;
+            background-color: #8050cf;
+            color: white;
+            text-decoration: none;
+            padding: 13px 28px;
+            border-radius: 30px;
+            font-weight: 600;
+            margin-top: 15px;
+            transition: background-color 0.2s;
+        }
+
+        .course-link:hover {
+            background-color: #a77aff;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid #343444;
+            color: #aaaabb;
+        }
+
+        footer a {
+            color: #a77aff;
+        }
+
+        @media (max-width: 600px) {
+            main {
+                margin: 25px auto;
+                padding: 15px;
+            }
+
+            .hero h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+
+    <script src="https://lint.page/kit/4d0fe3.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <header>
+        <h1>Steven Sharman</h1>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2>Welcome</h2>
+            <p>My Personal Website</p>
+        </section>
+
+        <section>
+            <h2>Home</h2>
+
+            <p class="description">
+                Welcome to my personal homepage. This website serves
+                as a central place to learn a little about me and
+                access my web development coursework and projects.
+            </p>
+
+            <p class="description">
+                I enjoy technology, computers, programming, and
+                continuously learning new skills.
+            </p>
+
+            <a class="course-link" href="web250/">
+                Visit My WEB250 Website →
+            </a>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Steven Sharman</p>
+
+        <p>
+            <a href="https://github.com/stevensharman1">GitHub</a>
+        </p>
+    </footer>
+
+    <script src="https://divonbriesen.github.io/teaching/tools/standards-check.js" defer></script>
+
+</body>
+</html>
+
