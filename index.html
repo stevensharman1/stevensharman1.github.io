@@ -5,19 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Steven Sharman ✦ Personal Homepage</title>
+    <title>Steven Sharman ✦ Home</title>
+
+    <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Georgia&display=swap" rel="stylesheet">
 
     <style>
         * {
             box-sizing: border-box;
         }
 
+        /* Dark background and light text provide strong contrast for readability. */
         body {
-            margin: 0;
+            max-width: 1600px;
+            margin: 0 auto;
             background-color: #15151e;
             color: #f5f5fa;
             font-family: 'Inter', sans-serif;
@@ -33,69 +37,77 @@
 
         header h1 {
             margin: 0;
+            font-family: Georgia, serif;
             font-size: 2rem;
+        }
+
+        header p {
+            margin-bottom: 0;
+            color: #c7b5e9;
         }
 
         main {
             max-width: 850px;
-            margin: 60px auto;
+            margin: 50px auto;
             padding: 30px;
             text-align: center;
         }
 
-        .hero {
-            padding: 65px 20px;
-            background:
-                linear-gradient(rgba(15, 15, 25, 0.4),
-                rgba(15, 15, 25, 0.65)),
-                url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1800&q=85');
-            background-size: cover;
-            background-position: center;
+        main img {
+            width: 100%;
+            max-width: 790px;
+            height: 280px;
+            object-fit: cover;
             border-radius: 12px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
-        .hero h2 {
-            font-size: 2.8rem;
-            margin: 0;
+        main h2 {
+            font-family: Georgia, serif;
+            font-size: 2.3rem;
+            color: #c5a4ff;
         }
 
-        .hero p {
-            font-size: 1.1rem;
-            letter-spacing: 2px;
-        }
-
-        .description {
+        main p {
             color: #d0d0dc;
             font-size: 1.1rem;
-            margin: 25px auto;
         }
 
-        .course-link {
+        a,
+        a:visited {
+            color: #c5a4ff;
+        }
+
+        a:hover {
+            color: #e0ceff;
+        }
+
+        main a {
             display: inline-block;
             background-color: #8050cf;
-            color: white;
-            text-decoration: none;
+            color: #f5f5fa;
             padding: 13px 28px;
             border-radius: 30px;
+            text-decoration: none;
             font-weight: 600;
             margin-top: 15px;
-            transition: background-color 0.2s;
         }
 
-        .course-link:hover {
+        main a:visited {
+            color: #f5f5fa;
+        }
+
+        main a:hover {
             background-color: #a77aff;
         }
 
         footer {
+            max-width: 850px;
+            margin: 0 auto;
             text-align: center;
-            padding: 20px;
+            padding: 25px;
             border-top: 1px solid #343444;
             color: #aaaabb;
-        }
-
-        footer a {
-            color: #a77aff;
         }
 
         @media (max-width: 600px) {
@@ -104,8 +116,12 @@
                 padding: 15px;
             }
 
-            .hero h2 {
-                font-size: 2rem;
+            main h2 {
+                font-size: 1.9rem;
+            }
+
+            main img {
+                height: 200px;
             }
         }
     </style>
@@ -117,37 +133,32 @@
 
     <header>
         <h1>Steven Sharman</h1>
+        <p><em>A personal space for technology, learning, and creativity.</em></p>
     </header>
 
     <main>
-        <section class="hero">
-            <h2>Welcome</h2>
-            <p>My Personal Website</p>
-        </section>
+        <h2>Home</h2>
 
-        <section>
-            <h2>Home</h2>
+        <img
+            src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=85"
+            alt="Mountain landscape beneath a dramatic evening sky">
 
-            <p class="description">
-                Welcome to my personal homepage. This website serves
-                as a central place to learn a little about me and
-                access my web development coursework and projects.
-            </p>
+        <p>
+            Welcome to my personal GitHub Pages homepage.
+            This website serves as a central place to learn a little
+            about me and find my web development coursework.
+        </p>
 
-            <p class="description">
-                I enjoy technology, computers, programming, and
-                continuously learning new skills.
-            </p>
+        <p>
+            I enjoy technology, computers, programming, and
+            continuously learning new skills.
+        </p>
 
-            <a class="course-link" href="web250/">
-                Visit My WEB250 Website →
-            </a>
-        </section>
+        <a href="web250/">Visit My WEB250 Website →</a>
     </main>
 
     <footer>
         <p>© 2026 Steven Sharman</p>
-
         <p>
             <a href="https://github.com/stevensharman1">GitHub</a>
         </p>
