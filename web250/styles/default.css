@@ -101,3 +101,12 @@ footer {
         margin: 5px;
     }
 }
+
+/* The site-logo class keeps the shared header logo circular and centered. */
+.site-logo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: block;
+    margin: 15px auto;
+}
