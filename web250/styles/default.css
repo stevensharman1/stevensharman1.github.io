@@ -117,3 +117,12 @@ footer p {
         margin: 5px;
     }
 }
+
+.hero-image {
+    display: block;
+    width: 40%;
+    max-width: 300px;
+    height: auto;
+    margin: 1rem auto;
+    border-radius: 8px;
+}
