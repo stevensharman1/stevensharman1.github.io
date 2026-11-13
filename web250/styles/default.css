@@ -142,8 +142,8 @@ footer p {
 /* Contract image sizing and positioning */
 .contract-image {
     display: block;
-    width: 100px;
-    max-width: 100%;
+    width: 200px;
+    max-width: 200%;
     height: auto;
     margin: 15px auto 25px;
 }
