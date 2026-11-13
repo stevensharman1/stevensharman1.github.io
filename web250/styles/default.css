@@ -139,16 +139,11 @@ footer p {
     border-radius: 8px;
 }
 
+/* Contract image sizing and positioning */
 .contract-image {
     display: block;
     width: 100px;
-    height: auto;
-    margin: 15px auto 25px;
-}
-
-main img.contract-image {
-    display: block;
-    width: 140px !important;
+    max-width: 100%;
     height: auto;
     margin: 15px auto 25px;
 }
