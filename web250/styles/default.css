@@ -138,3 +138,10 @@ footer p {
     margin: 1rem auto;
     border-radius: 8px;
 }
+
+.contract-image {
+    display: block;
+    width: 150px;
+    height: auto;
+    margin: 15px auto 25px;
+}
