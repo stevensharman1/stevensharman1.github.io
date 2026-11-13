@@ -69,18 +69,25 @@ h6 {
 
 /* Introduction Profile Photo */
 
+/* Introduction Profile Photo */
+
 figure {
-    margin: 20px 0;
+    margin: 20px auto;
+    text-align: center;
 }
 
 figure img {
+    display: block;
     max-width: 250px;
+    width: 100%;
     height: auto;
+    margin: 0 auto;
 }
 
 figcaption {
     margin-top: 8px;
     font-style: italic;
+    text-align: center;
 }
 
 /* The site-logo class keeps the shared header logo circular and centered. */
