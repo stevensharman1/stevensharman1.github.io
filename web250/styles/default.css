@@ -140,10 +140,12 @@ footer p {
 }
 
 /* Contract image sizing and positioning */
+
 .contract-image {
     display: block;
+    float: right;
     width: 250px;
     max-width: 100%;
     height: auto;
-    margin: 25px 30px 30px auto;
+    margin: 25px 30px 30px 20px;
 }
