@@ -12,3 +12,5 @@
     <p><em>Sneakiest Snake Around</em></p>
     <p>Steven Sharman ©2026</p>
 </footer>
+
+<script src="https://divonbriesen.github.io/teaching/tools/standards-check.js" defer></script>
