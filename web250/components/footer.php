@@ -1,7 +1,14 @@
 <footer>
     <p>
+        <a href="https://stevensharman1.github.io/">GitHub.io</a> |
         <a href="https://github.com/stevensharman1">GitHub</a> |
-        <a href="https://stevensharman1.github.io">GitHub.io</a> |
-        <a href="https://stevensharman1.github.io/WEB250">WEB250</a>
+        <a href="https://www.freecodecamp.org/stevensharman1">freeCodeCamp</a> |
+        <a href="https://www.codecademy.com/profiles/stevensharman1">Codecademy</a> |
+        <a href="https://www.linkedin.com/in/steven-sharman-143643293/">LinkedIn</a>
     </p>
+
+    <p>Designed by Sneaky Snake Productions</p>
+
+    <p><em>Sneakiest Snake Around</em></p>
+    <p>Steven Sharman ©2026</p>
 </footer>
