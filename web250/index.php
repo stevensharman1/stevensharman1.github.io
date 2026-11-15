@@ -1,3 +1,4 @@
+
 <?php
 $page = $_GET['page'] ?? 'home';
 
@@ -30,32 +31,36 @@ switch ($page) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Steven Sharman's Sneaky Snake ✦ WEB250 ✦ <?= $title ?></title>
+    <title>Steven Sharman’s Sneaky Snake ✦ WEB250 ✦ <?= htmlspecialchars($title) ?></title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Main stylesheet -->
     <link rel="stylesheet" href="styles/default.css">
+
+    <!-- Favicon -->
+    <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+
+    <!-- Accumulus -->
+    <script src="https://lint.page/kit/4d0fe3.js" crossorigin="anonymous"></script>
 </head>
+
 <body>
 
-<header>
-    <h1>Steven Sharman's Sneaky Snake ✦ WEB250</h1>
+    <!-- Shared header -->
+    <?php include 'components/header.php'; ?>
 
-    <nav>
-        <a href="index.php">Home</a> |
-        <a href="index.php?page=introduction">Introduction</a> |
-        <a href="index.php?page=contract">Contract</a> |
-        <a href="index.php?page=about">About</a> |
-        <a href="joyofphp/home.php">Sam's Used Cars</a> |
-        <a href="joyofphp/">Joy of PHP</a>
-    </nav>
-</header>
+    <main>
+        <?php include $content; ?>
+    </main>
 
-<main>
-    <?php include $content; ?>
-</main>
+    <!-- Shared footer -->
+    <?php include 'components/footer.php'; ?>
 
-<footer>
-    <p>Page built by The Sneakiest Snake Around ©<?= date('Y') ?></p>
-</footer>
+    <!-- Vicunadator -->
+    <script src="https://divonbriesen.github.io/teaching/tools/standards-check.js" defer></script>
 
 </body>
 </html>
