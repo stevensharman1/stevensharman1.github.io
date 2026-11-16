@@ -53,6 +53,8 @@ switch ($page) {
     <?php include 'components/header.php'; ?>
 
     <main>
+        <!-- The header include uses the site-logo class to maintain consistent logo styling across all pages. -->
+
         <?php include $content; ?>
     </main>
 
