@@ -49,7 +49,7 @@ switch ($page) {
 
 <body>
 
-    <!-- Shared header -->
+<!-- The included page content uses classes to apply page-specific image styling consistently. -->
     <?php include 'components/header.php'; ?>
 
     <main>
@@ -58,7 +58,7 @@ switch ($page) {
         <?php include $content; ?>
     </main>
 
-    <!-- Shared footer -->
+<!-- The included page content uses classes to apply page-specific image styling consistently. -->
     <?php include 'components/footer.php'; ?>
 
     <!-- Vicunadator -->
