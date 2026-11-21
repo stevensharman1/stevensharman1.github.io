@@ -1,70 +1,64 @@
+
 <?php
 /**
- * Joy of PHP sample code
- * Demonstrates how to process a login form securely
+ * Joy of PHP
+ * Processes the Sam's Used Cars login form.
  */
 
-// Include database connection
-include 'db.php';
-
-// Start the session securely
 session_start();
-if (session_status() !== PHP_SESSION_ACTIVE) {
-    die("Unable to start a secure session");
+
+// Include database connection.
+require_once 'db.php';
+
+// Retrieve form values.
+$myusername = trim($_POST['myusername'] ?? '');
+$mypassword = $_POST['mypassword'] ?? '';
+
+// Check that both fields were submitted.
+if ($myusername === '' || $mypassword === '') {
+    die("Username and password are required. <a href='login2.php'>Try again</a>");
 }
 
-// Select a database
-if (!$mysqli->select_db("Cars")) {
-    die("Error selecting database: " . $mysqli->error);
-}
-
-// Retrieve and sanitize input
-$myusername = filter_input(INPUT_POST, 'myusername', FILTER_SANITIZE_STRING);
-$mypassword = filter_input(INPUT_POST, 'mypassword', FILTER_SANITIZE_STRING);
-
-if (!$myusername || !$mypassword) {
-    die("Username or password cannot be empty.");
-}
-
-// Prepare and execute the query
-$query = "SELECT * FROM Users WHERE username = ?";
+// Look up the username.
+$query = "SELECT username, password, role FROM Users WHERE username = ?";
 $stmt = $mysqli->prepare($query);
 
 if (!$stmt) {
-    die("Prepare failed: " . $mysqli->error);
+    die("Database query failed.");
 }
 
-$stmt->bind_param('s', $myusername);
+$stmt->bind_param("s", $myusername);
 $stmt->execute();
+
+// Retrieve the account.
 $result = $stmt->get_result();
 
-if ($result->num_rows === 1) {
+if ($result && $result->num_rows === 1) {
     $user = $result->fetch_assoc();
 
-    // Verify password
+    // Verify the submitted password.
     if (password_verify($mypassword, $user['password'])) {
-        // Register session variables
-        $_SESSION['MyUserName'] = $myusername;
+
+        // Generate a new session ID.
+        session_regenerate_id(true);
+
+        // Store login information.
+        $_SESSION['MyUserName'] = $user['username'];
         $_SESSION['Role'] = $user['role'];
 
-        // Redirect to success page
+        // Redirect after successful login.
         header("Location: login_success.php");
-        exit;
-    } else {
-        echo "Invalid password.";
+        exit();
+
     }
-} else {
-    echo "Invalid username or password.";
 }
 
-// Clean up
+// Display a general error message.
+echo "<h2>Login Failed</h2>";
+echo "<p>Invalid username or password.</p>";
+echo "<p><a href='login2.php'>Try Again</a></p>";
+
+// Close database resources.
 $stmt->close();
 $mysqli->close();
 ?>
-<?php
-$password = 'user_plain_text_password'; // User-provided password
-
-// Hash the password
-$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-// Store $hashedPassword in your database
