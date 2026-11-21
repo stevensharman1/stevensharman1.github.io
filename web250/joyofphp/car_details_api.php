@@ -1,52 +1,64 @@
+
 <?php
-// Include database connection
+// Set the response header to JSON.
+header('Content-Type: application/json; charset=utf-8');
+
+// Include the database connection.
 include 'db.php';
 
-// Set response header to JSON
-header('Content-Type: application/json');
+// Check whether a VIN was provided.
+$vin = trim($_GET['VIN'] ?? '');
 
-// Check if VIN is provided in the query string
-if (!isset($_GET['VIN']) || empty($_GET['VIN'])) {
+if ($vin === '') {
+    http_response_code(400);
     echo json_encode(["error" => "VIN parameter is required."]);
-    exit();
+    $mysqli->close();
+    exit;
 }
 
-// Sanitize the VIN input
-$vin = $mysqli->real_escape_string($_GET['VIN']);
+// Prepare the database query.
+$query = "SELECT * FROM inventory WHERE VIN = ?";
+$stmt = $mysqli->prepare($query);
 
-// Prepare the SQL query
-$query = "SELECT * FROM inventory WHERE VIN='$vin'";
+if (!$stmt) {
+    http_response_code(500);
+    echo json_encode(["error" => "Could not prepare the database query."]);
+    $mysqli->close();
+    exit;
+}
 
-// Execute the query and handle potential errors
-if ($result = $mysqli->query($query)) {
-    // Check if the car exists
-    if ($result->num_rows > 0) {
-        // Fetch the car data
-        $car = $result->fetch_assoc();
+// Bind the VIN and execute the query.
+$stmt->bind_param("s", $vin);
+$stmt->execute();
 
-        // Prepare JSON response
-        $response = [
-            "year" => $car['YEAR'],
-            "make" => $car['Make'],
-            "model" => $car['Model'],
-            "trim" => $car['TRIM'],
-            "exterior_color" => $car['EXT_COLOR'],
-            "interior_color" => $car['INT_COLOR'],
-            "mileage" => $car['MILEAGE'],
-            "transmission" => $car['TRANSMISSION'],
-            "price" => $car['ASKING_PRICE']
-        ];
+$result = $stmt->get_result();
 
-        echo json_encode($response);
-    } else {
-        echo json_encode(["error" => "No vehicle found with VIN: $vin"]);
-    }
-    // Free the result set
-    $result->free();
+// Check whether the vehicle exists.
+if ($car = $result->fetch_assoc()) {
+
+    // Return the vehicle information as JSON.
+    $response = [
+        "year" => $car['YEAR'],
+        "make" => $car['Make'],
+        "model" => $car['Model'],
+        "trim" => $car['TRIM'],
+        "exterior_color" => $car['EXT_COLOR'],
+        "interior_color" => $car['INT_COLOR'],
+        "mileage" => $car['MILEAGE'],
+        "transmission" => $car['TRANSMISSION'],
+        "price" => $car['ASKING_PRICE']
+    ];
+
+    echo json_encode($response);
+
 } else {
-    echo json_encode(["error" => "Database query failed."]);
+    http_response_code(404);
+    echo json_encode(["error" => "Vehicle not found."]);
 }
 
-// Close the database connection
+// Close database resources.
+$result->free();
+$stmt->close();
 $mysqli->close();
 ?>
+
