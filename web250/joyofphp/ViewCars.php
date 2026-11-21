@@ -1,6 +1,9 @@
+
 <?php
+// Connect to the database.
 require_once 'db.php';
 
+// Get the vehicle inventory.
 $query = "SELECT Make, Model, ASKING_PRICE FROM inventory ORDER BY Make";
 $result = $mysqli->query($query);
 ?>
@@ -10,54 +13,47 @@ $result = $mysqli->query($query);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Complete Inventory</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Basic Car Inventory</title>
 </head>
 <body>
 
 <h1>Sam's Used Cars</h1>
-<h2>Complete Inventory</h2>
-
-<table id="Grid">
-    <thead>
-        <tr>
-            <th>Make</th>
-            <th>Model</th>
-            <th>Asking Price</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        <?php
-        $rowNumber = 0;
-
-        if ($result && $result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $class = ($rowNumber % 2 == 0) ? "odd" : "even";
-
-                echo "<tr class='$class'>";
-                echo "<td>" . htmlspecialchars($row['Make']) . "</td>";
-                echo "<td>" . htmlspecialchars($row['Model']) . "</td>";
-                echo "<td>$" . number_format((float)$row['ASKING_PRICE'], 2) . "</td>";
-                echo "</tr>";
-
-                $rowNumber++;
-            }
-        } else {
-            echo "<tr><td colspan='3'>No vehicles found.</td></tr>";
-        }
-        ?>
-    </tbody>
-</table>
-
-<p style="text-align:center;">
-    <a href="index.php">Home</a>
-</p>
+<h2>Basic Car Inventory</h2>
 
 <?php
+if ($result && $result->num_rows > 0) {
+    echo "<table>";
+
+    echo "<tr>";
+    echo "<th>Make</th>";
+    echo "<th>Model</th>";
+    echo "<th>Asking Price</th>";
+    echo "</tr>";
+
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr>";
+
+        echo "<td>" . htmlspecialchars($row['Make']) . "</td>";
+        echo "<td>" . htmlspecialchars($row['Model']) . "</td>";
+        echo "<td>$" . number_format((float)$row['ASKING_PRICE'], 2) . "</td>";
+
+        echo "</tr>";
+    }
+
+    echo "</table>";
+} else {
+    echo "<p>No vehicles found.</p>";
+}
+?>
+
+<p><a href="index.php">Home</a></p>
+
+<?php
+// Close the database connection.
 if ($result) {
     $result->free();
 }
+
 $mysqli->close();
 ?>
 
