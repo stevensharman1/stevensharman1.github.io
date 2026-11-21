@@ -1,57 +1,82 @@
-<html>
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Sam's Used Cars</title>
+    <meta charset="UTF-8">
+    <title>Sam's Used Cars - Complete Inventory</title>
     <link rel="stylesheet" type="text/css" href="style.css">
-</head> 
+</head>
+
 <body>
+
 <h1>Sam's Used Cars</h1>
 <h3>Complete Inventory</h3>
- <?php
+
+<?php
+// Connect to the database.
 include 'db.php';
-$query = "SELECT * FROM inventory ORDER BY Make";
-/* Try to insert the new car into the database */
-if ($result = $mysqli->query($query)) {
-   // Don't do anything if successful.
+
+// Get all vehicles, ordered by Make.
+$query = "SELECT Make, Model, ASKING_PRICE
+          FROM inventory
+          ORDER BY Make";
+
+$result = $mysqli->query($query);
+
+if (!$result) {
+    die("<p>Error getting cars from the database: " .
+        htmlspecialchars($mysqli->error) . "</p>");
 }
-else
-{
-    echo "Error getting cars from the database: " . mysqli_error($mysqli)."<br>";
-}
 
-// Create the table headers
-echo "<table id='Grid' style='width: 80%'><tr>";
-echo "<th style='width: 50px'>Make</th>";
-echo "<th style='width: 50px'>Model</th>";
-echo "<th style='width: 50px'>Asking Price</th>";
-echo "</tr>\n";
+// Create the table headers.
+echo "<table id='Grid' style='width: 80%'>";
+echo "<tr>";
+echo "<th>Make</th>";
+echo "<th>Model</th>";
+echo "<th>Asking Price</th>";
+echo "</tr>";
 
-$class ="odd";  // Keep track of whether a row was even or odd, so we can style it later
+$class = "odd";
 
-// Loop through all the rows returned by the query, creating a table row for each
-while ($result_ar = mysqli_fetch_assoc($result)) {
-    echo "<tr class=\"$class\">";
-    echo "<td>" . $result_ar['Make'] . "</td>";
-    echo "<td>" . $result_ar['Model'] . "</td>";
-    echo "<td>";
-    echo '$'.number_format($result_ar['ASKING_PRICE'],0);
-    echo "</td>";
-   echo "</td></tr>\n";
-   
-   // If the last row was even, make the next one odd and vice-versa
-    if ($class=="odd"){
-        $class="even";
+// Display the vehicles.
+if ($result->num_rows > 0) {
+
+    while ($result_ar = $result->fetch_assoc()) {
+
+        echo "<tr class='$class'>";
+
+        echo "<td>" .
+             htmlspecialchars($result_ar['Make']) .
+             "</td>";
+
+        echo "<td>" .
+             htmlspecialchars($result_ar['Model']) .
+             "</td>";
+
+        echo "<td>$" .
+             number_format((float)$result_ar['ASKING_PRICE'], 0) .
+             "</td>";
+
+        echo "</tr>";
+
+        // Alternate row colors.
+        $class = ($class == "odd") ? "even" : "odd";
     }
-    else
-    {
-        $class="odd";
-    }
+
+} else {
+    echo "<tr><td colspan='3'>No vehicles found.</td></tr>";
 }
+
 echo "</table>";
+
+// Close the database connection.
+$result->free();
 $mysqli->close();
-echo "<br/>\n";
-include 'footer.php';
 ?>
- </body>
- 
+
+<br>
+
+<?php include 'footer.php'; ?>
+
+</body>
 </html>
