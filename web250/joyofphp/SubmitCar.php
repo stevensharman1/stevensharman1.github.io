@@ -35,24 +35,56 @@ $PURCHASE_DATE = $_POST['PURCHASE_DATE'] ?? '';
 $SALE_DATE = $_POST['SALE_DATE'] ?? '';
 
 // Validate required fields.
-if (
-    $VIN === '' ||
-    strlen($VIN) !== 17 ||
-    $YEAR < 1900 ||
-    $Make === '' ||
-    $Model === '' ||
-    $ASKING_PRICE === '' ||
-    !is_numeric($ASKING_PRICE) ||
-    !is_numeric($SALE_PRICE) ||
-    !is_numeric($PURCHASE_PRICE) ||
-    (float)$ASKING_PRICE < 0 ||
-    (float)$SALE_PRICE < 0 ||
-    (float)$PURCHASE_PRICE < 0 ||
-    $MILEAGE < 0
-) {
-    exit("<p>Please check the vehicle information and try again.</p>
-          <p><a href='formEnterCar.php'>Return to Add Vehicle</a></p>");
+
+// Validate required fields and identify errors.
+$errors = [];
+
+if ($VIN === '') {
+    $errors[] = "VIN is required.";
+} elseif (strlen($VIN) !== 17) {
+    $errors[] = "VIN must contain exactly 17 characters.";
 }
+
+if ($YEAR < 1900) {
+    $errors[] = "Enter a valid vehicle year.";
+}
+
+if ($Make === '') {
+    $errors[] = "Make is required.";
+}
+
+if ($Model === '') {
+    $errors[] = "Model is required.";
+}
+
+if ($ASKING_PRICE === '' || !is_numeric($ASKING_PRICE) || (float)$ASKING_PRICE < 0) {
+    $errors[] = "Enter a valid asking price.";
+}
+
+if (!is_numeric($SALE_PRICE) || (float)$SALE_PRICE < 0) {
+    $errors[] = "Enter a valid sale price.";
+}
+
+if (!is_numeric($PURCHASE_PRICE) || (float)$PURCHASE_PRICE < 0) {
+    $errors[] = "Enter a valid purchase price.";
+}
+
+if ($MILEAGE < 0) {
+    $errors[] = "Enter valid mileage.";
+}
+
+if (!empty($errors)) {
+    echo "<h2>Please correct these fields:</h2><ul>";
+
+    foreach ($errors as $error) {
+        echo "<li>" . htmlspecialchars($error) . "</li>";
+    }
+
+    echo "</ul>";
+    echo "<p><a href='formEnterCar.php'>Return to Add Vehicle</a></p>";
+    exit;
+}
+
 
 // Convert prices to numbers.
 $ASKING_PRICE = (float)$ASKING_PRICE;
