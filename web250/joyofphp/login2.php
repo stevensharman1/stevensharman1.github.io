@@ -67,6 +67,13 @@
         <button type="submit">Log In</button>
     </form>
 
+    <!-- Instructor demo login information -->
+<div class="demo-info">
+    <h3>Instructor Demo Login</h3>
+    <p>Username: Sam</p>
+    <p>Password: pw123</p>
+</div>
+    
     <p><a href="index.php">Home</a></p>
 </div>
 
