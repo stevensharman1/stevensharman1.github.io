@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Sam's Used Cars - Complete Inventory</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
