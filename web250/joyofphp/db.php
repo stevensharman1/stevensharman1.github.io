@@ -1,26 +1,27 @@
- <?php
-
+ 
+<?php
+// Database connection settings.
 $local = true;
-if ($local == true){
+$docker = false;
+
+if ($local) {
     $dbuser = 'root';
     $dbpass = 'root';
     $dbhost = 'localhost';
-}
-$docker = false;
-if ($docker == true){
+} elseif ($docker) {
     $dbuser = 'root';
     $dbpass = 'verysecret';
     $dbhost = 'mySQL';
 }
-$mysqli = mysqli_connect($dbhost, $dbuser, $dbpass) or die("Unable to Connect to '$dbhost'");
 
+// Connect to MySQL without selecting a database yet.
+$mysqli = new mysqli($dbhost, $dbuser, $dbpass);
 
-/* check connection */
-if (mysqli_connect_errno()) {
-    printf("Connect failed: %s\n", mysqli_connect_error());
-    exit();
+// Check the connection.
+if ($mysqli->connect_error) {
+    die("Database connection failed: " . $mysqli->connect_error);
 }
-//select a database to work with
-$mysqli->select_db("Cars");
- 
+
+// Set the character encoding.
+$mysqli->set_charset("utf8mb4");
 ?>
