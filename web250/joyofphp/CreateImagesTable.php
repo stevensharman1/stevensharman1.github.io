@@ -1,33 +1,29 @@
+
 <?php
 /**
- * Joy of PHP sample code
- * Demonstrates how to create a database, create a table, and insert records.
+ * Joy of PHP - Sam's Used Cars
+ * Creates the Images table for vehicle pictures.
  */
 
 include 'db.php';
 
-   if (!$mysqli) { 
-      die('Could not connect: ' . mysqli_error($mysqli));
-  } 
-  echo 'Connected successfully to mySQL. <BR>'; 
+echo "<h1>Sam's Used Cars - Image Setup</h1>";
 
+// Create the Images table if it does not already exist.
+$query = "CREATE TABLE IF NOT EXISTS IMAGES (
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    VIN VARCHAR(17),
+    ImageFile VARCHAR(250)
+)";
 
-//select a database to work with
-$mysqli->select_db("Cars");
-   Echo ("Selected the Cars database <br>");
-
-$query = " CREATE TABLE IMAGES (ID INT PRIMARY KEY NOT NULL AUTO_INCREMENT, VIN varchar(17), ImageFile varchar(250))";
-//echo "<p>***********</p>";
-//echo $query ;
-//echo "<p>***********</p>";
-if ($mysqli->query($query) === TRUE) 
-{
-    echo "Database table 'Images' created</P>";
+if ($mysqli->query($query)) {
+    echo "<p>Images table is ready.</p>";
+} else {
+    die("<p>Error creating Images table: " .
+        htmlspecialchars($mysqli->error) . "</p>");
 }
-else
-{
-    echo "<p>Error: " . mysqli_error($mysqli);
-}
- echo "<br><br><a href='home.html'>Home</a>";
+
+echo "<p><a href='index.php'>Home</a></p>";
+
 $mysqli->close();
 ?>
