@@ -1,60 +1,89 @@
+
 <?php
- include 'db.php';
- $vin = trim($_POST['VIN']);
-if ($_FILES["file"]["error"] > 0)
-  {
-  echo "Error: " . $_FILES["file"]["error"] . "<br>";
-  }
-else
-  {
-  echo "Upload: " . $_FILES["file"]["name"] . "<br>". "\n";
-  echo "Type: " . $_FILES["file"]["type"] . "<br>". "\n";
-  echo "Size: " . ($_FILES["file"]["size"] / 1024) . " kB<br>". "\n";
-  echo "VIN: ".$vin."<br>";
-  echo "Stored temporarily as: " . $_FILES["file"]["tmp_name"]."<br><BR>". "\n";
-  $currentfolder =  getcwd();
-  echo "This script is running in: " .$currentfolder."<br>". "\n";
-  $target_path = getcwd() ."/uploads/";
-  echo "The uploaded file will be stored in the folder: ".$target_path."<br>". "\n";
+/**
+ * Joy of PHP
+ * Uploads car images and saves their information in the database.
+ */
 
-  $target_path = $target_path . basename( $_FILES['file']['name']); 
-  $imagename = "uploads/". basename( $_FILES['file']['name']); 
-  echo "The full file name of the uploaded file is '". $target_path."'<br>". "\n";
+require_once 'db.php';
 
-  echo "The relative name of the file for use in the IMG tag is " . $imagename ."<br><br>". "\n";;
+// Get the VIN.
+$vin = trim($_POST['VIN'] ?? '');
 
-if(move_uploaded_file($_FILES['file']['tmp_name'], $target_path)) {
-    echo "The file ".  basename( $_FILES['file']['name']). " has been uploaded<br>". "\n";
-   
-    // Create a database entry for this image
-    if (mysqli_connect_errno()) {
-        printf("Connect failed: %s\n", mysqli_connect_error());
-        exit();
-    }
-
-  echo 'Connected successfully to mySQL. <BR>'; 
-  $file_name =  $_FILES["file"]["name"];
-  $query = "INSERT INTO images (VIN, ImageFile) VALUES ('$vin', '$file_name')";
-  echo $query."<br>\n";
-   echo  "<a href='AddImage.php?VIN=";
-   echo $vin;
-   echo "'>Add another image for this car </a></p>\n";
-/* Try to insert the new car into the database */
-if ($result = $mysqli->query($query)) {
-        echo "<p>You have successfully entered $target_path into the database.</P>\n";
-       
-    }
-    else
-    {
-        echo "Error entering $VIN into database: " . mysql_error()."<br>";
-    }
-    $mysqli->close();
-    echo "<img src='$imagename' width='150'><br>";
-
-} else{
-    echo "There was an error uploading the file, please try again!";
+// Check that a VIN was provided.
+if ($vin === '') {
+    die("Please provide a VIN.");
 }
-  }
-  
-  include 'footer.php'
-?> 
+
+// Check for upload errors.
+if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+    die("There was an error uploading the file.");
+}
+
+// Set the upload folder.
+$uploadFolder = __DIR__ . '/uploads/';
+
+// Create the folder if it does not exist.
+if (!is_dir($uploadFolder)) {
+    mkdir($uploadFolder, 0755, true);
+}
+
+// Check the uploaded file type.
+$fileInfo = new finfo(FILEINFO_MIME_TYPE);
+$fileType = $fileInfo->file($_FILES['file']['tmp_name']);
+
+$allowedTypes = [
+    'image/jpeg' => 'jpg',
+    'image/png' => 'png',
+    'image/gif' => 'gif',
+    'image/webp' => 'webp'
+];
+
+if (!isset($allowedTypes[$fileType])) {
+    die("Only JPG, PNG, GIF, and WEBP images are allowed.");
+}
+
+// Generate a unique filename.
+$fileName = bin2hex(random_bytes(16)) . '.' . $allowedTypes[$fileType];
+
+$targetPath = $uploadFolder . $fileName;
+$imageName = 'uploads/' . $fileName;
+
+// Move the uploaded file.
+if (!move_uploaded_file($_FILES['file']['tmp_name'], $targetPath)) {
+    die("Unable to save the uploaded image.");
+}
+
+// Insert the image information into the database.
+$query = "INSERT INTO images (VIN, ImageFile) VALUES (?, ?)";
+
+$stmt = $mysqli->prepare($query);
+
+if (!$stmt) {
+    unlink($targetPath);
+    die("Database query failed.");
+}
+
+$stmt->bind_param("ss", $vin, $imageName);
+
+if ($stmt->execute()) {
+    echo "<h2>Image Uploaded Successfully</h2>";
+    echo "<p>The image has been saved for VIN: "
+        . htmlspecialchars($vin) . "</p>";
+
+    echo "<img src='" . htmlspecialchars($imageName)
+        . "' alt='Uploaded car image' width='150'>";
+
+    echo "<p><a href='AddImage.php?VIN="
+        . urlencode($vin) . "'>Add another image for this car</a></p>";
+} else {
+    unlink($targetPath);
+    echo "<p>Error saving the image information: "
+        . htmlspecialchars($stmt->error) . "</p>";
+}
+
+$stmt->close();
+$mysqli->close();
+
+include 'footer.php';
+?>
