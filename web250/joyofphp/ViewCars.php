@@ -1,51 +1,75 @@
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Sam's Used Cars</title>
-   </head>
 
-   
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sam's Used Cars - Complete Inventory</title>
+</head>
+
 <body>
+
 <h1>Sam's Used Cars</h1>
 <h3>Complete Inventory</h3>
- <?php
+
+<?php
+// Connect to the database.
 include 'db.php';
+
+// Get all vehicles, ordered by Make.
 $query = "SELECT * FROM inventory ORDER BY Make";
-/* Try to insert the new car into the database */
-if ($result = $mysqli->query($query)) {
-   // Don't do anything if successful.
+
+$result = $mysqli->query($query);
+
+if (!$result) {
+    die("<p>Error getting cars from the database: " .
+        htmlspecialchars($mysqli->error) . "</p>");
 }
-else
-{
-    echo "Error getting cars from the database: " . mysql_error()."<br>";
-}
 
-//***
-echo "<table id='Grid' style='width: 80%'><tr>";
-echo "<th style='width: 50px'>Make</th>";
-echo "<th style='width: 50px'>Model</th>";
-echo "<th style='width: 50px'>Asking Price</th>";
-echo "</tr>\n";
+// Display the inventory table.
+echo "<table id='Grid' style='width: 80%'>";
+echo "<tr>";
+echo "<th>Make</th>";
+echo "<th>Model</th>";
+echo "<th>Asking Price</th>";
+echo "</tr>";
 
-$class ="odd";
+$class = "odd";
 
-while ($result_ar = mysqli_fetch_assoc($result)) {
-    echo "<tr class=\"$class\">";
-    echo "<td>" . $result_ar['Make'] . "</td>";
-    echo "<td>" . $result_ar['Model'] . "</td>";
-    echo "<td>" . $result_ar['ASKING_PRICE'] . "</td>";
-   echo "</td></tr>\n";
-    if ($class=="odd"){
-        $class="even";
+if ($result->num_rows > 0) {
+
+    while ($result_ar = $result->fetch_assoc()) {
+
+        echo "<tr class='$class'>";
+
+        echo "<td>" .
+             htmlspecialchars($result_ar['Make']) .
+             "</td>";
+
+        echo "<td>" .
+             htmlspecialchars($result_ar['Model']) .
+             "</td>";
+
+        echo "<td>$" .
+             htmlspecialchars($result_ar['ASKING_PRICE']) .
+             "</td>";
+
+        echo "</tr>";
+
+        // Alternate row classes.
+        $class = ($class == "odd") ? "even" : "odd";
     }
-    else
-    {
-        $class="odd";
-    }
+
+} else {
+    echo "<tr><td colspan='3'>No vehicles found.</td></tr>";
 }
+
 echo "</table>";
+
+// Close the database connection.
 $mysqli->close();
 ?>
- </body>
- 
+
+<p><a href="index.php">Home</a></p>
+
+</body>
 </html>
