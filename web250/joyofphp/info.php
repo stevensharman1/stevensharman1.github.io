@@ -1,4 +1,9 @@
+
 <?php
-// Check if PHP is installed and display version and configuration info
+/**
+ * Joy of PHP
+ * Displays PHP version and configuration information.
+ */
+
 phpinfo();
 ?>
