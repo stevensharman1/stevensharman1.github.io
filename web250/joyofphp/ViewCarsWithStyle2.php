@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Sam's Used Cars - Current Inventory</title>
-
+<link rel="stylesheet" href="style.css">
     <style>
         /* Format the inventory table. */
         #Grid {
