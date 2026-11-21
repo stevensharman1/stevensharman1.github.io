@@ -1,46 +1,80 @@
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Sam's Used Cars</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sam's Used Cars - Complete Inventory</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
+
 <body>
+
 <h1>Sam's Used Cars</h1>
 <h3>Complete Inventory</h3>
+
 <?php
-$apiUrl = 'http://localhost:8888/joy_of_php/cars_list_api.php';
+// Get vehicle data from the API.
+$apiUrl = 'cars_list_api.php';
 $response = file_get_contents($apiUrl);
 
-if ($response === FALSE) {
-    echo "Error fetching car data.";
-    exit;
+if ($response === false) {
+    die("<p>Error fetching car data from the API.</p>");
 }
 
+// Convert the JSON response into a PHP array.
 $cars = json_decode($response, true);
 
-if (isset($cars['error'])) {
-    echo "Error: " . $cars['error'];
-    exit;
+if (json_last_error() !== JSON_ERROR_NONE) {
+    die("<p>Error reading vehicle data: " .
+        htmlspecialchars(json_last_error_msg()) . "</p>");
 }
 
-echo "<table id='Grid' style='width: 80%'><tr>";
-echo "<th style='width: 50px'>Make</th>";
-echo "<th style='width: 50px'>Model</th>";
-echo "<th style='width: 50px'>Asking Price</th>";
-echo "</tr>\n";
+if (isset($cars['error'])) {
+    die("<p>Error: " .
+        htmlspecialchars($cars['error']) . "</p>");
+}
+
+// Display the inventory table.
+echo "<table id='Grid' style='width: 80%'>";
+echo "<tr>";
+echo "<th>Make</th>";
+echo "<th>Model</th>";
+echo "<th>Asking Price</th>";
+echo "</tr>";
 
 $class = "odd";
-foreach ($cars as $car) {
-    echo "<tr class=\"$class\">";
-    echo "<td>" . htmlspecialchars($car['Make']) . "</td>";
-    echo "<td>" . htmlspecialchars($car['Model']) . "</td>";
-    echo "<td>" . htmlspecialchars($car['ASKING_PRICE']) . "</td>";
-    echo "</tr>\n";
-    $class = ($class == "odd") ? "even" : "odd";
+
+if (!empty($cars)) {
+
+    foreach ($cars as $car) {
+
+        echo "<tr class='$class'>";
+
+        echo "<td>" .
+             htmlspecialchars($car['Make'] ?? '') .
+             "</td>";
+
+        echo "<td>" .
+             htmlspecialchars($car['Model'] ?? '') .
+             "</td>";
+
+        echo "<td>$" .
+             htmlspecialchars((string)($car['ASKING_PRICE'] ?? '')) .
+             "</td>";
+
+        echo "</tr>";
+
+        $class = ($class == "odd") ? "even" : "odd";
+    }
+
+} else {
+    echo "<tr><td colspan='3'>No vehicles found.</td></tr>";
 }
 
 echo "</table>";
 ?>
+
+<p><a href="index.php">Home</a></p>
+
 </body>
 </html>
