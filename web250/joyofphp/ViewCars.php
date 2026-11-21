@@ -4,6 +4,7 @@ require_once 'db.php';
 $query = "SELECT Make, Model, ASKING_PRICE FROM inventory ORDER BY Make";
 $result = $mysqli->query($query);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,26 +26,33 @@ $result = $mysqli->query($query);
             <th>Asking Price</th>
         </tr>
     </thead>
+
     <tbody>
-        <?php if ($result && $result->num_rows > 0): ?>
-            <?php $rowNumber = 0; ?>
-            <?php while ($row = $result->fetch_assoc()): ?>
-                <tr class="<?php echo ($rowNumber % 2 === 0) ? 'odd' : 'even'; ?>">
-                    <td><?php echo htmlspecialchars($row['Make']); ?></td>
-                    <td><?php echo htmlspecialchars($row['Model']); ?></td>
-                    <td>$<?php echo number_format((float)$row['ASKING_PRICE'], 2); ?></td>
-                </tr>
-                <?php $rowNumber++; ?>
-            <?php endwhile; ?>
-        <?php else: ?>
-            <tr>
-                <td colspan="3">No vehicles found.</td>
-            </tr>
-        <?php endif; ?>
+        <?php
+        $rowNumber = 0;
+
+        if ($result && $result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $class = ($rowNumber % 2 == 0) ? "odd" : "even";
+
+                echo "<tr class='$class'>";
+                echo "<td>" . htmlspecialchars($row['Make']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['Model']) . "</td>";
+                echo "<td>$" . number_format((float)$row['ASKING_PRICE'], 2) . "</td>";
+                echo "</tr>";
+
+                $rowNumber++;
+            }
+        } else {
+            echo "<tr><td colspan='3'>No vehicles found.</td></tr>";
+        }
+        ?>
     </tbody>
 </table>
 
-<p><a href="index.php">Home</a></p>
+<p style="text-align:center;">
+    <a href="index.php">Home</a>
+</p>
 
 <?php
 if ($result) {
