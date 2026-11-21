@@ -1,7 +1,3 @@
-<?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -9,6 +5,7 @@ ini_set('display_errors', 1);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sam's Used Cars - Complete Inventory</title>
+    <link rel="stylesheet" href="Grid.css">
 </head>
 
 <body>
@@ -17,32 +14,27 @@ ini_set('display_errors', 1);
 <h3>Complete Inventory</h3>
 
 <?php
-// Connect to the database.
 require_once 'db.php';
 
-// Check the database connection.
-if (!isset($mysqli) || $mysqli->connect_error) {
-    die("<p>Database connection failed.</p>");
-}
-
-// Get all vehicles, ordered by Make.
+// Retrieve all vehicles.
 $query = "SELECT * FROM inventory ORDER BY Make";
-
 $result = $mysqli->query($query);
 
-// Check for query errors.
 if (!$result) {
-    die("<p>Error getting cars from the database: "
+    die("<p>Error retrieving inventory: "
         . htmlspecialchars($mysqli->error) . "</p>");
 }
 
-// Display the inventory table.
-echo "<table id='Grid' style='width: 80%'>";
+// Display inventory using the Grid table format.
+echo "<table id='Grid'>";
+echo "<thead>";
 echo "<tr>";
 echo "<th>Make</th>";
 echo "<th>Model</th>";
 echo "<th>Asking Price</th>";
 echo "</tr>";
+echo "</thead>";
+echo "<tbody>";
 
 if ($result->num_rows > 0) {
 
@@ -53,9 +45,7 @@ if ($result->num_rows > 0) {
         echo "<tr class='$class'>";
 
         echo "<td>" . htmlspecialchars($car['Make']) . "</td>";
-
         echo "<td>" . htmlspecialchars($car['Model']) . "</td>";
-
         echo "<td>$" . number_format((float)$car['ASKING_PRICE'], 2) . "</td>";
 
         echo "</tr>";
@@ -67,9 +57,9 @@ if ($result->num_rows > 0) {
     echo "<tr><td colspan='3'>No vehicles found.</td></tr>";
 }
 
+echo "</tbody>";
 echo "</table>";
 
-// Close database resources.
 $result->free();
 $mysqli->close();
 ?>
