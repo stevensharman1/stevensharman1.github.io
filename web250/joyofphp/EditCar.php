@@ -1,56 +1,53 @@
-<html>
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>Car Saved</title>
+    <meta charset="UTF-8">
+    <title>Car Saved</title>
 </head>
-<body bgcolor="#FFFFFF" text="#000000" >
+<body>
+
+<h1>Sam's Used Cars</h1>
 
 <?php
-// Capture the values posted to this php program from the text fields in the form
+// Capture the values posted from the form.
+$VIN = $_POST['VIN'] ?? '';
+$Make = $_POST['Make'] ?? '';
+$Model = $_POST['Model'] ?? '';
+$Price = $_POST['Asking_Price'] ?? '';
 
-$VIN = $_REQUEST['VIN'] ;
-$Make = $_REQUEST['Make'] ;
-$Model = $_REQUEST['Model'] ;
-$Price = $_REQUEST['Asking_Price'] ;
-
-//Build a SQL Query using the values from above
-
-$query = "UPDATE inventory SET 
-
-VIN='$VIN', 
-Make='$Make', 
-Model='$Model', 
-ASKING_PRICE='$Price'
-
-WHERE
-
-VIN='$VIN'"; 
-
-// Print the query to the browser so you can see it
-echo ($query. "<br>");
-
+// Connect to the database.
 include 'db.php';
-/* check connection */
-if (mysqli_connect_errno()) {
- echo ("Connection failed: ". $mysqli->error."<br>");
- exit();
+
+// Update the existing vehicle.
+$query = "UPDATE inventory
+          SET Make = ?, Model = ?, ASKING_PRICE = ?
+          WHERE VIN = ?";
+
+$stmt = $mysqli->prepare($query);
+
+if (!$stmt) {
+    die("Error preparing update: " . htmlspecialchars($mysqli->error));
 }
 
- echo 'Connected successfully to mySQL. <BR>';
+$stmt->bind_param("ssds", $Make, $Model, $Price, $VIN);
 
-//select a database to work with
-$mysqli->select_db("Cars");
- Echo ("Selected the Cars database. <br>");
+if ($stmt->execute()) {
+    if ($stmt->affected_rows > 0) {
+        echo "<p>You successfully updated $Make $Model.</p>";
+    } else {
+        echo "<p>No changes were made. The vehicle may already have these values, or the VIN was not found.</p>";
+    }
+} else {
+    echo "<p>Error updating vehicle: " .
+         htmlspecialchars($stmt->error) . "</p>";
+}
 
-/* Try to insert the new car into the database */
-if ($result = $mysqli->query($query)) {
- echo "<p>You have successfully entered $Make $Model into the database.</P>";
-}
-else
-{
- echo "Error entering $VIN into database: " . mysql_error()."<br>";
-}
+$stmt->close();
 $mysqli->close();
 ?>
+
 <p><a href="ViewCarsWithStyle2.php">View Cars with Edit Links</a></p>
+
 </body>
 </html>
