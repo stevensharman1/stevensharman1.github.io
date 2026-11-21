@@ -20,36 +20,39 @@ if ($myusername === '' || $mypassword === '') {
 }
 
 // Look up the username.
-$query = "SELECT username, password, role FROM Users WHERE username = ?";
+// Use lowercase users to match the table name.
+$query = "SELECT username, password, role FROM users WHERE username = ?";
+
 $stmt = $mysqli->prepare($query);
 
 if (!$stmt) {
-    die("Database query failed.");
+    die("Database query failed: " . htmlspecialchars($mysqli->error));
 }
 
 $stmt->bind_param("s", $myusername);
 $stmt->execute();
 
-// Retrieve the account.
-$result = $stmt->get_result();
+// Retrieve account information without get_result().
+$stmt->bind_result($username, $hashedPassword, $role);
 
-if ($result && $result->num_rows === 1) {
-    $user = $result->fetch_assoc();
+if ($stmt->fetch()) {
 
     // Verify the submitted password.
-    if (password_verify($mypassword, $user['password'])) {
+    if (password_verify($mypassword, $hashedPassword)) {
 
         // Generate a new session ID.
         session_regenerate_id(true);
 
         // Store login information.
-        $_SESSION['MyUserName'] = $user['username'];
-        $_SESSION['Role'] = $user['role'];
+        $_SESSION['MyUserName'] = $username;
+        $_SESSION['Role'] = $role;
+
+        $stmt->close();
+        $mysqli->close();
 
         // Redirect after successful login.
         header("Location: login_success.php");
         exit();
-
     }
 }
 
