@@ -1,31 +1,39 @@
+
 <?php
 /**
- * Joy of PHP sample code
- * Demonstrates how to modify an existing database table.
+ * Joy of PHP - Sam's Used Cars
+ * Adds the Primary_Image column to the inventory table.
  */
+
 include 'db.php';
 
-   if (!$mysqli) { 
-      die("Could not connect: ".$mysqli->error."<br>"); 
-  } 
-  echo 'Connected successfully to mySQL. <BR>'; 
-  
-//select a database to work with
-$mysqli->select_db("Cars");
-   Echo ("Selected the Cars database<br>");
+echo "<h1>Sam's Used Cars - Database Update</h1>";
 
-$query = "ALTER TABLE `inventory` ADD `Primary_Image` VARCHAR(250) NULL AFTER `SALE_DATE`";
-echo "<p>***********</p>";
-echo $query ;
-echo "<p>***********</p>";
-if ($mysqli->query($query) === TRUE) 
-{
-    echo "Database table 'INVENTORY' modified</P>";
+// Check whether the Primary_Image column already exists.
+$check = $mysqli->query("SHOW COLUMNS FROM inventory LIKE 'Primary_Image'");
+
+if (!$check) {
+    die("Error checking inventory table: " .
+        htmlspecialchars($mysqli->error));
 }
-else
-{
-    echo "<p>Error: </p>" . $mysqli->error."<br>";;
+
+if ($check->num_rows > 0) {
+    echo "<p>The Primary_Image column already exists.</p>";
+} else {
+
+    // Add the Primary_Image column.
+    $query = "ALTER TABLE inventory
+              ADD Primary_Image VARCHAR(250) NULL AFTER SALE_DATE";
+
+    if ($mysqli->query($query)) {
+        echo "<p>The Primary_Image column was successfully added.</p>";
+    } else {
+        echo "<p>Error modifying inventory: " .
+             htmlspecialchars($mysqli->error) . "</p>";
+    }
 }
+
 $mysqli->close();
-echo "<br><br><a href='home.html'>Home</a>";
 ?>
+
+<p><a href="index.php">Home</a></p>
