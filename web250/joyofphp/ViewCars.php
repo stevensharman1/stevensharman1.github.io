@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sam's Used Cars - Complete Inventory</title>
 </head>
 
@@ -13,16 +14,22 @@
 
 <?php
 // Connect to the database.
-include 'db.php';
+require_once 'db.php';
+
+// Check the database connection.
+if (!isset($mysqli) || $mysqli->connect_error) {
+    die("<p>Database connection failed.</p>");
+}
 
 // Get all vehicles, ordered by Make.
 $query = "SELECT * FROM inventory ORDER BY Make";
 
 $result = $mysqli->query($query);
 
+// Check for query errors.
 if (!$result) {
-    die("<p>Error getting cars from the database: " .
-        htmlspecialchars($mysqli->error) . "</p>");
+    die("<p>Error getting cars from the database: "
+        . htmlspecialchars($mysqli->error) . "</p>");
 }
 
 // Display the inventory table.
@@ -33,30 +40,23 @@ echo "<th>Model</th>";
 echo "<th>Asking Price</th>";
 echo "</tr>";
 
-$class = "odd";
-
 if ($result->num_rows > 0) {
 
-    while ($result_ar = $result->fetch_assoc()) {
+    $class = "odd";
+
+    while ($car = $result->fetch_assoc()) {
 
         echo "<tr class='$class'>";
 
-        echo "<td>" .
-             htmlspecialchars($result_ar['Make']) .
-             "</td>";
+        echo "<td>" . htmlspecialchars($car['Make']) . "</td>";
 
-        echo "<td>" .
-             htmlspecialchars($result_ar['Model']) .
-             "</td>";
+        echo "<td>" . htmlspecialchars($car['Model']) . "</td>";
 
-        echo "<td>$" .
-             htmlspecialchars($result_ar['ASKING_PRICE']) .
-             "</td>";
+        echo "<td>$" . number_format((float)$car['ASKING_PRICE'], 2) . "</td>";
 
         echo "</tr>";
 
-        // Alternate row classes.
-        $class = ($class == "odd") ? "even" : "odd";
+        $class = ($class === "odd") ? "even" : "odd";
     }
 
 } else {
@@ -65,7 +65,8 @@ if ($result->num_rows > 0) {
 
 echo "</table>";
 
-// Close the database connection.
+// Close database resources.
+$result->free();
 $mysqli->close();
 ?>
 
