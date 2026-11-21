@@ -1,57 +1,85 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>Car Entry Form</title>
+    <meta charset="UTF-8">
+    <title>Car Entry Form</title>
 </head>
 <body>
-<h1>Sam's Used Cars
-</h1>
+
+<h1>Sam's Used Cars</h1>
+
 <?php
 include 'db.php';
-$vin = $_GET['VIN'];
-$query = "SELECT * FROM inventory WHERE VIN='$vin'";
-/* Try to query the database */
-if ($result = $mysqli->query($query)) {
- // echo "<p>Got the info</p>"; // Don't do anything if successful.
-}
-else
-{
- echo "Sorry, a vehicle with VIN of $vin cannot be found " .  $mysqli->error."<br>";
-}
-// Loop through all the rows returned by the query, creating a table row for each
-while ($result_ar = mysqli_fetch_assoc($result)) {
- $VIN = $result_ar['VIN'];
- $year = $result_ar['YEAR'];
- $make = $result_ar['Make'];
- $model = $result_ar['Model'];
- $trim = $result_ar['TRIM'];
- $color = $result_ar['EXT_COLOR'];
- $interior = $result_ar['INT_COLOR'];
- $mileage = $result_ar['MILEAGE'];
- $transmission = $result_ar['TRANSMISSION'];
- $price = $result_ar['ASKING_PRICE'];
-}
-echo "$VIN </p>";
-//echo "$year $make $model </p>";
-//echo "<p>Asking Price: $price </p>";
-//echo "<p>Exterior Color: $color </p>";
-//echo "<p>Interior Color: $interior </p>";
 
+// Get the VIN from the URL.
+$vin = $_GET['VIN'] ?? '';
+
+if ($vin === '') {
+    die("<p>No vehicle VIN was provided.</p>");
+}
+
+// Find the vehicle using its VIN.
+$query = "SELECT VIN, Make, Model, ASKING_PRICE
+          FROM inventory
+          WHERE VIN = ?";
+
+$stmt = $mysqli->prepare($query);
+
+if (!$stmt) {
+    die("<p>Database error: " .
+        htmlspecialchars($mysqli->error) . "</p>");
+}
+
+$stmt->bind_param("s", $vin);
+$stmt->execute();
+
+$result = $stmt->get_result();
+$car = $result->fetch_assoc();
+
+if (!$car) {
+    die("<p>Sorry, no vehicle was found with VIN " .
+        htmlspecialchars($vin) . ".</p>");
+}
+
+// Store the vehicle information.
+$VIN = $car['VIN'];
+$make = $car['Make'];
+$model = $car['Model'];
+$price = $car['ASKING_PRICE'];
+
+$stmt->close();
 $mysqli->close();
 ?>
 
-<form action="EditCar.php"
-method=”post”>
-<input name="VIN" type="hidden" value= "<?php echo "$VIN" ?>" /><br />
-<br />
-Make: <input name="Make" type="text" value= "<?php echo "$make" ?>" /><br />
-<br />
-Model: <input name="Model" type="text" value= "<?php echo "$model" ?>" /><br />
-<br />
-Price: <input name="Asking_Price" type="text" value= "<?php echo "$price" ?>" /><br />
-<br />
-<input name="Submit1" type="submit" value="submit" /><br />
-&nbsp;</form>
+<form action="EditCar.php" method="post">
+
+    <input type="hidden" name="VIN"
+           value="<?php echo htmlspecialchars($VIN); ?>" />
+
+    <p>
+        Make:
+        <input name="Make" type="text"
+               value="<?php echo htmlspecialchars($make); ?>" />
+    </p>
+
+    <p>
+        Model:
+        <input name="Model" type="text"
+               value="<?php echo htmlspecialchars($model); ?>" />
+    </p>
+
+    <p>
+        Price:
+        <input name="Asking_Price" type="number" step="0.01"
+               value="<?php echo htmlspecialchars($price); ?>" />
+    </p>
+
+    <input name="Submit1" type="submit" value="Save Changes" />
+
+</form>
+
+<p><a href="ViewCarsWithStyle2.php">Back to Vehicle List</a></p>
+
 </body>
 </html>
