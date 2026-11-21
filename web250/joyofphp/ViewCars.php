@@ -22,31 +22,35 @@ $result = $mysqli->query($query);
 
 <?php
 if ($result && $result->num_rows > 0) {
-    echo "<table>";
+
+    echo "<table style='border-collapse: collapse; width: 80%; margin: auto;'>";
 
     echo "<tr>";
-    echo "<th>Make</th>";
-    echo "<th>Model</th>";
-    echo "<th>Asking Price</th>";
+    echo "<th style='padding: 8px 12px; text-align: left;'>Make</th>";
+    echo "<th style='padding: 8px 12px; text-align: left;'>Model</th>";
+    echo "<th style='padding: 8px 12px; text-align: left;'>Asking Price</th>";
     echo "</tr>";
 
     while ($row = $result->fetch_assoc()) {
         echo "<tr>";
 
-        echo "<td>" . htmlspecialchars($row['Make']) . "</td>";
-        echo "<td>" . htmlspecialchars($row['Model']) . "</td>";
-        echo "<td>$" . number_format((float)$row['ASKING_PRICE'], 2) . "</td>";
+        echo "<td style='padding: 8px 12px;'>" . htmlspecialchars($row['Make']) . "</td>";
+        echo "<td style='padding: 8px 12px;'>" . htmlspecialchars($row['Model']) . "</td>";
+        echo "<td style='padding: 8px 12px;'>$" . number_format((float)$row['ASKING_PRICE'], 2) . "</td>";
 
         echo "</tr>";
     }
 
     echo "</table>";
+
 } else {
     echo "<p>No vehicles found.</p>";
 }
 ?>
 
-<p><a href="index.php">Home</a></p>
+<p style="text-align: center; margin-top: 20px;">
+    <a href="index.php">Home</a>
+</p>
 
 <?php
 // Close the database connection.
