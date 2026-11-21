@@ -8,40 +8,50 @@
 // Set the response format to JSON.
 header('Content-Type: application/json; charset=utf-8');
 
-// Connect to the database.
-include 'db.php';
+// Prevent database warnings from corrupting JSON output.
+mysqli_report(MYSQLI_REPORT_OFF);
 
-// Get all vehicles, ordered by Make.
-$query = "SELECT * FROM inventory ORDER BY Make";
+try {
 
-$cars = [];
+    // Connect to the database.
+    require_once 'db.php';
 
-$result = $mysqli->query($query);
+    // Get all vehicles, ordered by Make.
+    $query = "SELECT * FROM inventory ORDER BY Make";
 
-if ($result) {
+    $result = $mysqli->query($query);
 
-    // Add each vehicle to the cars array.
+    if (!$result) {
+        http_response_code(500);
+
+        echo json_encode([
+            "error" => "Error retrieving cars: " . $mysqli->error
+        ]);
+
+        $mysqli->close();
+        exit();
+    }
+
+    // Store vehicle records.
+    $cars = [];
+
     while ($row = $result->fetch_assoc()) {
         $cars[] = $row;
     }
 
+    // Close database resources.
     $result->free();
-
-    // Close the database connection.
     $mysqli->close();
 
-    // Return the vehicle information.
+    // Return valid JSON.
     echo json_encode($cars);
 
-} else {
+} catch (Throwable $error) {
 
-    // Return a JSON error if the query fails.
     http_response_code(500);
 
     echo json_encode([
-        "error" => "Error retrieving cars from the database."
+        "error" => "API error: " . $error->getMessage()
     ]);
-
-    $mysqli->close();
 }
 ?>
