@@ -1,17 +1,18 @@
+
 <?php
 /**
  * Joy of PHP - Sam's Used Cars
  * Creates the inventory table and inserts sample vehicles.
  */
 
-include 'db.php';
+require_once 'db.php';
 
 echo "<h1>Sam's Used Cars - Database Setup</h1>";
 
 // Create the inventory table if it does not already exist.
 $query = "CREATE TABLE IF NOT EXISTS inventory (
     VIN VARCHAR(17) PRIMARY KEY,
-    YEAR INT,
+    `YEAR` INT,
     Make VARCHAR(50),
     Model VARCHAR(100),
     TRIM VARCHAR(50),
@@ -26,13 +27,14 @@ $query = "CREATE TABLE IF NOT EXISTS inventory (
     SALE_DATE DATE
 )";
 
-if ($mysqli->query($query) === TRUE) {
+if ($mysqli->query($query)) {
     echo "<p>Inventory table is ready.</p>";
 } else {
-    die("<p>Error creating inventory table: " . $mysqli->error . "</p>");
+    die("<p>Error creating inventory table: "
+        . htmlspecialchars($mysqli->error) . "</p>");
 }
 
-// Sample vehicle records.
+// Original sample vehicle records.
 $cars = [
     ['5FNYF4H91CB054036', 2012, 'Honda', 'Pilot', 'Touring', 'White Diamond Pearl', 'Leather', 37807, null, 34250, 7076, 'Automatic', '2012-11-08', null],
     ['LAKSDFJ234LASKRF2', 2009, 'Dodge', 'Durango', 'SLT', 'Silver', 'Black', 2700, null, 2000, 144000, '4WD Automatic', '2012-12-05', null],
@@ -67,27 +69,22 @@ $cars = [
     ['YV4SZ592561219696', 2006, 'Volvo', 'XC70', 'AWD', 'Willow Green Metallic', 'Taupe Leather', 14996, null, 11247, 83664, '5-Speed Automatic w/ Geartronic', '2013-01-14', null]
 ];
 
-// Insert only vehicles that are not already in inventory.
+// Prepare the insert statement.
 $insert = $mysqli->prepare(
     "INSERT IGNORE INTO inventory
-    (VIN, YEAR, Make, Model, TRIM, EXT_COLOR, INT_COLOR,
+    (VIN, `YEAR`, Make, Model, TRIM, EXT_COLOR, INT_COLOR,
     ASKING_PRICE, SALE_PRICE, PURCHASE_PRICE, MILEAGE,
     TRANSMISSION, PURCHASE_DATE, SALE_DATE)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 );
 
 if (!$insert) {
-    die("<p>Prepare failed: " . $mysqli->error . "</p>");
+    die("<p>Prepare failed: "
+        . htmlspecialchars($mysqli->error) . "</p>");
 }
 
-$insert->bind_param(
-    "sisssssdddis ss",
-    $vin, $year, $make, $model, $trim, $extColor, $intColor,
-    $askingPrice, $salePrice, $purchasePrice, $mileage,
-    $transmission, $purchaseDate, $saleDate
-);
-
-$added = 0;
+// Correct type string: 14 parameters.
+$inserted = 0;
 
 foreach ($cars as $car) {
     [
@@ -96,20 +93,29 @@ foreach ($cars as $car) {
         $transmission, $purchaseDate, $saleDate
     ] = $car;
 
+    $insert->bind_param(
+        "sisssssdddisss",
+        $vin, $year, $make, $model, $trim, $extColor, $intColor,
+        $askingPrice, $salePrice, $purchasePrice, $mileage,
+        $transmission, $purchaseDate, $saleDate
+    );
+
     if ($insert->execute()) {
-        $added += $insert->affected_rows;
+        $inserted += $insert->affected_rows;
     } else {
-        echo "<p>Error inserting VIN " . htmlspecialchars($vin) . ": "
+        echo "<p>Error inserting vehicle: "
             . htmlspecialchars($insert->error) . "</p>";
     }
 }
 
 $insert->close();
 
-echo "<p>Database setup complete. $added new vehicles added.</p>";
+echo "<h2>Database Setup Complete</h2>";
+echo "<p>$inserted new vehicles added.</p>";
 echo "<p>Existing vehicles were left unchanged.</p>";
 
 $mysqli->close();
 
-include 'footer.php';
+echo "<p><a href='ViewCars.php'>View Complete Inventory</a></p>";
 ?>
+
