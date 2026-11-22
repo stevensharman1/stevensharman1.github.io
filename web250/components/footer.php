@@ -7,10 +7,10 @@
         <a href="https://www.linkedin.com/in/steven-sharman-143643293/">LinkedIn</a>
     </p>
 
-    <p>Designed by Sneaky Snake Productions</p>
+    <p>Designed by Sneaky Snake Productions ©2026</p>
 
     <p><em>Sneakiest Snake Around</em></p>
-    <p>Steven Sharman ©2026</p>
+    
 </footer>
 
 <script src="https://divonbriesen.github.io/teaching/tools/standards-check.js" defer></script>
