@@ -29,6 +29,7 @@ header {
     text-align: center;
 }
 
+/* One heading rule defines the shared heading font and color. */
 h1,
 h2,
 h3 {
@@ -36,6 +37,7 @@ h3 {
     color: #3D3028;
 }
 
+/* H1 styling is defined only once. */
 h1 {
     margin: 0;
 }
@@ -69,6 +71,8 @@ section {
     padding: 20px;
     border: 1px solid #D8C8B8;
     border-radius: 8px;
+
+    /* White provides a clean, readable background for each content section. */
     background-color: #FFFFFF;
 }
 
@@ -102,6 +106,9 @@ input {
     border-radius: 5px;
     font-family: inherit;
     font-size: 1rem;
+
+    /* Includes padding and border inside the input's declared width. */
+    box-sizing: border-box;
 }
 
 input:focus {
@@ -114,7 +121,10 @@ button {
     border: none;
     border-radius: 5px;
     background-color: #8F4325;
+
+    /* White text contrasts with the dark rust button background. */
     color: white;
+
     font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
@@ -147,15 +157,20 @@ button:hover {
 
 #Grid th {
     background-color: #8F4325;
+
+    /* White text contrasts with the dark rust table headings. */
     color: #FFFFFF;
+
     font-family: Georgia, serif;
 }
 
-#Grid tr.odd td {
+/* Alternating row colors make inventory records easier to read. */
+.odd td {
     background-color: #F7F1E5;
 }
 
-#Grid tr.even td {
+.even td {
+    /* White distinguishes alternating inventory rows. */
     background-color: #FFFFFF;
 }
 
