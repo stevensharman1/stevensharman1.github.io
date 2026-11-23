@@ -137,7 +137,7 @@ function fieldValue($car, $field) {
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="styles/default.css">
-    <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
 
     <!-- Accumulus Validator -->
     <script src="https://lint.page/kit/4d0fe3.js" crossorigin="anonymous"></script>
