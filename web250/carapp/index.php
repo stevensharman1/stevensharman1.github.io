@@ -39,7 +39,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["save"])) {
     $saleDate = !empty($_POST["SALE_DATE"]) ? trim($_POST["SALE_DATE"]) : null;
     $originalVIN = trim($_POST["ORIGINAL_VIN"] ?? "");
 
-    // Check the vehicle information.
+    // Validate the required vehicle information and date format.
+    $validPurchaseDate = $purchaseDate === null ||
+        preg_match('/^\d{4}-\d{2}-\d{2}$/', $purchaseDate);
+
+    $validSaleDate = $saleDate === null ||
+        preg_match('/^\d{4}-\d{2}-\d{2}$/', $saleDate);
+
     if (
         strlen($vin) !== 17 ||
         $year < 1900 ||
@@ -48,12 +54,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["save"])) {
         $askingPrice < 0 ||
         $salePrice < 0 ||
         $purchasePrice < 0 ||
-        $mileage < 0
+        $mileage < 0 ||
+        !$validPurchaseDate ||
+        !$validSaleDate
     ) {
-        $message = "Please check the vehicle information. VIN must be 17 characters.";
+        $message = "Please check the vehicle information. VIN must be 17 characters and dates must use YYYY-MM-DD.";
     } else {
         if ($originalVIN !== "") {
-            // Update an existing vehicle.
             $stmt = $mysqli->prepare(
                 "UPDATE inventory SET
                 VIN=?, YEAR=?, Make=?, Model=?, TRIM=?,
@@ -74,7 +81,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["save"])) {
 
             $successMessage = "Vehicle updated successfully.";
         } else {
-            // Insert a new vehicle.
             $stmt = $mysqli->prepare(
                 "INSERT INTO inventory (
                 VIN, YEAR, Make, Model, TRIM,
@@ -122,7 +128,7 @@ if (isset($_GET["edit"])) {
 // Retrieve inventory.
 $result = $mysqli->query("SELECT * FROM inventory ORDER BY Make, Model");
 
-// Safely display database values.
+// Safely display database values in form fields and table cells.
 function fieldValue($car, $field) {
     return htmlspecialchars((string)($car[$field] ?? ""), ENT_QUOTES, "UTF-8");
 }
@@ -152,6 +158,9 @@ function fieldValue($car, $field) {
 <header>
     <h1>Steven Sharman’s Sneaky Snake ✦ WEB250</h1>
 
+    <!-- The existing favicon image is reused as the site logo. -->
+    <img src="../images/favicon.svg" alt="Sneaky Snake logo" class="site-logo">
+
     <nav>
         <a href="index.php">Used Cars Home</a> |
         <a href="../index.php">WEB250 Home</a>
@@ -169,8 +178,9 @@ function fieldValue($car, $field) {
     <?php endif; ?>
 
     <section>
-        <h2><?= $editCar ? "Edit Vehicle" : "Add a Vehicle" ?></h2>
+        <h3><?= $editCar ? "Edit Vehicle" : "Add a Vehicle" ?></h3>
 
+        <!-- Classes and IDs organize the form and provide consistent styling. -->
         <form method="post" action="index.php">
             <input type="hidden" name="ORIGINAL_VIN"
                 value="<?= fieldValue($editCar ?? [], "VIN") ?>">
@@ -226,7 +236,7 @@ function fieldValue($car, $field) {
             <input id="TRANSMISSION" name="TRANSMISSION" type="text"
                 value="<?= fieldValue($editCar ?? [], "TRANSMISSION") ?>">
 
-            <!-- Text date fields for broader browser compatibility. -->
+            <!-- Text inputs accept YYYY-MM-DD dates without relying on browser date controls. -->
             <label for="PURCHASE_DATE">Purchase Date:</label>
             <input id="PURCHASE_DATE" name="PURCHASE_DATE" type="text"
                 placeholder="YYYY-MM-DD"
@@ -248,9 +258,11 @@ function fieldValue($car, $field) {
     </section>
 
     <section>
-        <h2>Current Inventory</h2>
+        <h3>Current Inventory</h3>
 
         <?php if ($result && $result->num_rows > 0): ?>
+
+            <!-- This div makes the wide inventory table scroll on smaller screens. -->
             <div class="table-wrapper">
                 <table id="Grid">
                     <thead>
@@ -307,6 +319,7 @@ function fieldValue($car, $field) {
                     </tbody>
                 </table>
             </div>
+
         <?php else: ?>
             <p>No vehicles are currently in the inventory.</p>
         <?php endif; ?>
@@ -315,6 +328,7 @@ function fieldValue($car, $field) {
 </main>
 
 <footer>
+    <p><em>"Slow and steady in quality, fast in learning."</em></p>
     <p>Page built by Steven Sharman's Sneaky Snake.</p>
     <p>WEB250 Web Development</p>
 
@@ -339,6 +353,5 @@ function fieldValue($car, $field) {
 if ($result) {
     $result->free();
 }
-
 $mysqli->close();
 ?>
