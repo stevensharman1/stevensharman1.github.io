@@ -186,8 +186,8 @@ function fieldValue($car, $field) {
                 value="<?= fieldValue($editCar ?? [], "VIN") ?>">
 
             <!-- Displays the Chrysler 300C above the vehicle fields. -->
-            <img src="images/chrysler-300c.png"
-                alt="Black Chrysler 300C" class="car-image">
+           <img src="images/Black%20Chrysler%20300C%20Vector%20Illustration.png"
+     alt="Black Chrysler 300C" class="car-image">
 
             <label for="VIN">VIN:</label>
             <input id="VIN" name="VIN" type="text" maxlength="17"
