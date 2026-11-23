@@ -134,7 +134,7 @@ function fieldValue($car, $field) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Steven Sharman’s Sneaky Snake ✦ WEB250 ✦ Used Cars</title>
+    <title>Steven Sharman’s Sneaky Snake ✦ WEB250 ✦ Sam's Used Cars Inventory</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
