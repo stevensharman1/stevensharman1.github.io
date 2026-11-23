@@ -160,7 +160,7 @@ function fieldValue($car, $field) {
 
     <!-- The existing favicon image is reused as the site logo. -->
     <img src="../images/favicon.svg" alt="Sneaky Snake logo" class="site-logo">
-
+    <img src="images/chrysler-300c.png" alt="Black Chrysler 300C" class="car-image">
     <nav>
         <a href="index.php">Used Cars Home</a> |
         <a href="../index.php">WEB250 Home</a>
