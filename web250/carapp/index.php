@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["save"])) {
     $saleDate = !empty($_POST["SALE_DATE"]) ? trim($_POST["SALE_DATE"]) : null;
     $originalVIN = trim($_POST["ORIGINAL_VIN"] ?? "");
 
-    // Validate the required vehicle information and date format.
+    // Validate required vehicle information and date format.
     $validPurchaseDate = $purchaseDate === null ||
         preg_match('/^\d{4}-\d{2}-\d{2}$/', $purchaseDate);
 
@@ -155,10 +155,15 @@ function fieldValue($car, $field) {
 
 <body>
 
+<!-- Classes are reusable CSS selectors for styling groups of elements.
+IDs identify individual elements for unique styling and targeting.
+The div below groups the inventory table for responsive scrolling.
+No span elements are needed because inline grouping is not required. -->
+
 <header>
     <h1>Steven Sharman’s Sneaky Snake ✦ WEB250</h1>
 
-    <!-- Reuses the existing Sneaky Snake favicon as the site logo. -->
+    <!-- The site-logo class controls the size and placement of the logo. -->
     <img src="../images/favicon.svg" alt="Sneaky Snake logo" class="site-logo">
 
     <nav>
@@ -180,14 +185,17 @@ function fieldValue($car, $field) {
     <section>
         <h3><?= $editCar ? "Edit Vehicle" : "Add a Vehicle" ?></h3>
 
-        <!-- The form groups all vehicle information and its image together. -->
+        <!-- The form class allows consistent form styling.
+        Each input ID connects its label to the correct field.
+        The ORIGINAL_VIN field identifies the vehicle being edited. -->
+
         <form method="post" action="index.php">
             <input type="hidden" name="ORIGINAL_VIN"
                 value="<?= fieldValue($editCar ?? [], "VIN") ?>">
 
-            <!-- Displays the Chrysler 300C above the vehicle fields. -->
-           <img src="images/Black%20Chrysler%20300C%20Vector%20Illustration.png"
-     alt="Black Chrysler 300C" class="car-image">
+            <!-- The car-image class controls the image size and placement. -->
+            <img src="images/Black%20Chrysler%20300C%20Vector%20Illustration.png"
+                alt="Black Chrysler 300C" class="car-image">
 
             <label for="VIN">VIN:</label>
             <input id="VIN" name="VIN" type="text" maxlength="17"
@@ -240,7 +248,7 @@ function fieldValue($car, $field) {
             <input id="TRANSMISSION" name="TRANSMISSION" type="text"
                 value="<?= fieldValue($editCar ?? [], "TRANSMISSION") ?>">
 
-            <!-- Text inputs accept YYYY-MM-DD dates without browser date controls. -->
+            <!-- Text fields accept dates in YYYY-MM-DD format. -->
             <label for="PURCHASE_DATE">Purchase Date:</label>
             <input id="PURCHASE_DATE" name="PURCHASE_DATE" type="text"
                 placeholder="YYYY-MM-DD"
@@ -266,7 +274,10 @@ function fieldValue($car, $field) {
 
         <?php if ($result && $result->num_rows > 0): ?>
 
-            <!-- Allows the wide inventory table to scroll on smaller screens. -->
+            <!-- This div is needed to allow horizontal scrolling
+            when the inventory table is wider than the screen.
+            The table-wrapper class provides the scrolling CSS. -->
+
             <div class="table-wrapper">
                 <table id="Grid">
                     <thead>
@@ -359,4 +370,3 @@ if ($result) {
 }
 $mysqli->close();
 ?>
-
