@@ -158,9 +158,9 @@ function fieldValue($car, $field) {
 <header>
     <h1>Steven Sharman’s Sneaky Snake ✦ WEB250</h1>
 
-    <!-- The existing favicon image is reused as the site logo. -->
+    <!-- Reuses the existing Sneaky Snake favicon as the site logo. -->
     <img src="../images/favicon.svg" alt="Sneaky Snake logo" class="site-logo">
-    <img src="images/chrysler-300c.png" alt="Black Chrysler 300C" class="car-image">
+
     <nav>
         <a href="index.php">Used Cars Home</a> |
         <a href="../index.php">WEB250 Home</a>
@@ -180,10 +180,14 @@ function fieldValue($car, $field) {
     <section>
         <h3><?= $editCar ? "Edit Vehicle" : "Add a Vehicle" ?></h3>
 
-        <!-- Classes and IDs organize the form and provide consistent styling. -->
+        <!-- The form groups all vehicle information and its image together. -->
         <form method="post" action="index.php">
             <input type="hidden" name="ORIGINAL_VIN"
                 value="<?= fieldValue($editCar ?? [], "VIN") ?>">
+
+            <!-- Displays the Chrysler 300C above the vehicle fields. -->
+            <img src="images/chrysler-300c.png"
+                alt="Black Chrysler 300C" class="car-image">
 
             <label for="VIN">VIN:</label>
             <input id="VIN" name="VIN" type="text" maxlength="17"
@@ -236,7 +240,7 @@ function fieldValue($car, $field) {
             <input id="TRANSMISSION" name="TRANSMISSION" type="text"
                 value="<?= fieldValue($editCar ?? [], "TRANSMISSION") ?>">
 
-            <!-- Text inputs accept YYYY-MM-DD dates without relying on browser date controls. -->
+            <!-- Text inputs accept YYYY-MM-DD dates without browser date controls. -->
             <label for="PURCHASE_DATE">Purchase Date:</label>
             <input id="PURCHASE_DATE" name="PURCHASE_DATE" type="text"
                 placeholder="YYYY-MM-DD"
@@ -262,7 +266,7 @@ function fieldValue($car, $field) {
 
         <?php if ($result && $result->num_rows > 0): ?>
 
-            <!-- This div makes the wide inventory table scroll on smaller screens. -->
+            <!-- Allows the wide inventory table to scroll on smaller screens. -->
             <div class="table-wrapper">
                 <table id="Grid">
                     <thead>
@@ -355,3 +359,4 @@ if ($result) {
 }
 $mysqli->close();
 ?>
+
