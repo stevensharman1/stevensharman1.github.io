@@ -227,3 +227,12 @@ footer p {
     display: block;
     margin: 10px auto;
 }
+
+/* Styles the Chrysler 300C image. */
+.car-image {
+    width: 300px;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 15px auto;
+}
