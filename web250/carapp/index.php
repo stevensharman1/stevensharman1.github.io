@@ -35,10 +35,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["save"])) {
     $purchasePrice = (float)($_POST["PURCHASE_PRICE"] ?? 0);
     $mileage = (int)($_POST["MILEAGE"] ?? 0);
     $transmission = trim($_POST["TRANSMISSION"] ?? "");
-    $purchaseDate = !empty($_POST["PURCHASE_DATE"]) ? $_POST["PURCHASE_DATE"] : null;
-    $saleDate = !empty($_POST["SALE_DATE"]) ? $_POST["SALE_DATE"] : null;
+    $purchaseDate = !empty($_POST["PURCHASE_DATE"]) ? trim($_POST["PURCHASE_DATE"]) : null;
+    $saleDate = !empty($_POST["SALE_DATE"]) ? trim($_POST["SALE_DATE"]) : null;
     $originalVIN = trim($_POST["ORIGINAL_VIN"] ?? "");
 
+    // Check the vehicle information.
     if (
         strlen($vin) !== 17 ||
         $year < 1900 ||
@@ -52,6 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["save"])) {
         $message = "Please check the vehicle information. VIN must be 17 characters.";
     } else {
         if ($originalVIN !== "") {
+            // Update an existing vehicle.
             $stmt = $mysqli->prepare(
                 "UPDATE inventory SET
                 VIN=?, YEAR=?, Make=?, Model=?, TRIM=?,
@@ -72,6 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["save"])) {
 
             $successMessage = "Vehicle updated successfully.";
         } else {
+            // Insert a new vehicle.
             $stmt = $mysqli->prepare(
                 "INSERT INTO inventory (
                 VIN, YEAR, Make, Model, TRIM,
@@ -119,6 +122,7 @@ if (isset($_GET["edit"])) {
 // Retrieve inventory.
 $result = $mysqli->query("SELECT * FROM inventory ORDER BY Make, Model");
 
+// Safely display database values.
 function fieldValue($car, $field) {
     return htmlspecialchars((string)($car[$field] ?? ""), ENT_QUOTES, "UTF-8");
 }
@@ -222,12 +226,15 @@ function fieldValue($car, $field) {
             <input id="TRANSMISSION" name="TRANSMISSION" type="text"
                 value="<?= fieldValue($editCar ?? [], "TRANSMISSION") ?>">
 
+            <!-- Text date fields for broader browser compatibility. -->
             <label for="PURCHASE_DATE">Purchase Date:</label>
-            <input id="PURCHASE_DATE" name="PURCHASE_DATE" type="date"
+            <input id="PURCHASE_DATE" name="PURCHASE_DATE" type="text"
+                placeholder="YYYY-MM-DD"
                 value="<?= fieldValue($editCar ?? [], "PURCHASE_DATE") ?>">
 
             <label for="SALE_DATE">Sale Date:</label>
-            <input id="SALE_DATE" name="SALE_DATE" type="date"
+            <input id="SALE_DATE" name="SALE_DATE" type="text"
+                placeholder="YYYY-MM-DD"
                 value="<?= fieldValue($editCar ?? [], "SALE_DATE") ?>">
 
             <button type="submit" name="save">
@@ -320,8 +327,6 @@ function fieldValue($car, $field) {
             CSS Validator
         </a>
     </p>
-
-    <!-- Accumulus and Vicunadator are also included as validator scripts. -->
 </footer>
 
 <!-- Vicunadator Validator -->
@@ -334,5 +339,6 @@ function fieldValue($car, $field) {
 if ($result) {
     $result->free();
 }
+
 $mysqli->close();
 ?>
