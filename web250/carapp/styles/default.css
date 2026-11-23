@@ -29,16 +29,11 @@ header {
     text-align: center;
 }
 
-/* One heading rule defines the shared heading font and color. */
 h1,
 h2,
 h3 {
     font-family: Georgia, serif;
     color: #3D3028;
-}
-
-/* H1 styling is defined only once. */
-h1 {
     margin: 0;
 }
 
