@@ -1,6 +1,4 @@
 
-</main>
-
 <footer>
     <p><em>"Slow and steady in quality, fast in learning."</em></p>
 
@@ -19,10 +17,9 @@
     </p>
 </footer>
 
-<!-- Vicunadator Validator -->
+<!-- Vicunadator validator. -->
 <script src="https://divonbriesen.github.io/teaching/tools/standards-check.js"
         defer></script>
 
 </body>
 </html>
-
