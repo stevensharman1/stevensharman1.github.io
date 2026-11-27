@@ -236,3 +236,27 @@ footer p {
     display: block;
     margin: 15px auto;
 }
+
+/* Places the login form and demo credentials beside each other. */
+.login-layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+/* Gives the login form its own flexible column. */
+.login-form {
+    flex: 1;
+    min-width: 220px;
+}
+
+/* Styles the demonstration credentials area. */
+.demo-credentials {
+    flex: 1;
+    min-width: 200px;
+    padding: 15px;
+    background-color: #FFFDF8;
+    border: 1px solid #D8C8B8;
+    border-radius: 8px;
+}
