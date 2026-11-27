@@ -250,7 +250,7 @@ $result = $stmt->get_result();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Steven Sharman’s Sneaky Snake ✦ WEB250 ✦ Car AppB</title>
+    <title>Steven Sharman’s Sneaky Snake ✦ WEB250 ✦ Used Cars Inventory - Car AppB</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
