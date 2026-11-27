@@ -335,10 +335,9 @@ $cars = $stmt->get_result();
 
         <p>Total vehicles: <?= $totalCars ?></p>
 
-        <!-- The table-wrapper class makes the inventory table scroll on narrow screens. -->
-        <div class="table-wrapper">
-
-            <!-- The Grid id identifies the inventory table for its CSS styling. -->
+            <!-- This div is needed to wrap the wide inventory table so it can scroll horizontally on smaller screens. -->
+            <div class="table-wrapper">        
+        <!-- The Grid id identifies the inventory table for its CSS styling. -->
             <table id="Grid">
 
                 <thead>
@@ -431,6 +430,7 @@ $cars = $stmt->get_result();
 
                     <?php endif; ?>
                 </tbody>
+        <!-- This div closes the responsive wrapper around the inventory table. -->
 
             </table>
         </div>
