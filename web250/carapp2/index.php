@@ -430,10 +430,10 @@ $cars = $stmt->get_result();
 
                     <?php endif; ?>
                 </tbody>
-        <!-- This div closes the responsive wrapper around the inventory table. -->
+         </table>
 
-            </table>
-        </div>
+        <!-- This div closes the responsive wrapper around the inventory table. -->
+    </div>
 
         <!-- The pagination class styles the links between inventory pages. -->
         <nav class="pagination" aria-label="Inventory pages">
@@ -441,6 +441,7 @@ $cars = $stmt->get_result();
             <?php if ($page > 1): ?>
                 <a href="?page=<?= $page - 1 ?>">Previous</a>
             <?php endif; ?>
+        <!-- This span keeps the current page number together on one line between pagination links. -->
 
             <span>
                 Page <?= $page ?> of <?= $totalPages ?>
