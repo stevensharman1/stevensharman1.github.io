@@ -299,8 +299,10 @@ $result = $stmt->get_result();
 
         <?php if ($totalCars > 0): ?>
 
+        <!-- The table-wrapper div allows the wide inventory table to scroll on smaller screens. -->
             <div class="table-wrapper">
 
+                  <!-- The Grid id identifies the inventory table for its existing CSS styling. -->
                 <table id="Grid">
 
                     <thead>
@@ -332,6 +334,7 @@ $result = $stmt->get_result();
 
                         <?php while ($car = $result->fetch_assoc()): ?>
 
+                        <!-- The odd and even classes alternate row styling to make inventory easier to read. -->
                             <tr class="<?= $rowNumber++ % 2 === 0 ? 'odd' : 'even' ?>">
 
                                 <td><?= escapeValue($car['VIN']) ?></td>
@@ -386,7 +389,7 @@ $result = $stmt->get_result();
                     </tbody>
 
                 </table>
-
+<!-- End of the responsive table-wrapper div. -->
             </div>
 
             <nav aria-label="Inventory pages">
