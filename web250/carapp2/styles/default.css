@@ -1,0 +1,238 @@
+
+/* Steven Sharman's Sneaky Snake - Used Cars */
+
+/* General page styling */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-color: #F7F1E5;
+    color: #3D3028;
+    font-family: "Nunito Sans", Arial, sans-serif;
+    line-height: 1.6;
+}
+
+header,
+main,
+footer {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Header */
+header {
+    background-color: #FFFDF8;
+    border-bottom: 2px solid #D8C8B8;
+    padding: 20px;
+    text-align: center;
+}
+
+h1,
+h2,
+h3 {
+    font-family: Georgia, serif;
+    color: #3D3028;
+    margin: 0;
+}
+
+nav {
+    padding-top: 10px;
+}
+
+nav a,
+a {
+    color: #8F4325;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav a:hover,
+a:hover {
+    color: #B65C32;
+    text-decoration: underline;
+}
+
+/* Main content */
+main {
+    padding: 25px;
+    background-color: #FFFDF8;
+    min-height: 600px;
+}
+
+section {
+    margin: 25px 0;
+    padding: 20px;
+    border: 1px solid #D8C8B8;
+    border-radius: 8px;
+
+    /* White provides a clean, readable background for each content section. */
+    background-color: #FFFFFF;
+}
+
+/* Messages */
+.message {
+    padding: 12px;
+    margin: 15px 0;
+    border: 1px solid #8F4325;
+    border-radius: 5px;
+    background-color: #F7F1E5;
+    font-weight: bold;
+}
+
+/* Forms */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 600px;
+}
+
+label {
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #D8C8B8;
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: 1rem;
+
+    /* Includes padding and border inside the input's declared width. */
+    box-sizing: border-box;
+}
+
+input:focus {
+    outline: 2px solid #8F4325;
+}
+
+button {
+    padding: 10px 16px;
+    margin-top: 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #8F4325;
+
+    /* White text contrasts with the dark rust button background. */
+    color: white;
+
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #B65C32;
+}
+
+/* Inventory table */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+#Grid {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px auto;
+    font-size: 0.9rem;
+}
+
+#Grid th,
+#Grid td {
+    border: 1px solid #D8C8B8;
+    padding: 9px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+#Grid th {
+    background-color: #8F4325;
+
+    /* White text contrasts with the dark rust table headings. */
+    color: #FFFFFF;
+
+    font-family: Georgia, serif;
+}
+
+/* Alternating row colors make inventory records easier to read. */
+.odd td {
+    background-color: #F7F1E5;
+}
+
+.even td {
+    /* White distinguishes alternating inventory rows. */
+    background-color: #FFFFFF;
+}
+
+#Grid tr:hover td {
+    background-color: #EADCCB;
+}
+
+#Grid form {
+    display: inline;
+}
+
+#Grid button {
+    margin: 3px;
+    padding: 6px 10px;
+    font-size: 0.85rem;
+}
+
+/* Footer */
+footer {
+    background-color: #FFFDF8;
+    border-top: 2px solid #D8C8B8;
+    padding: 20px;
+    text-align: center;
+}
+
+footer p {
+    margin: 5px;
+}
+
+/* Responsive layout */
+@media screen and (max-width: 700px) {
+    body {
+        padding: 8px;
+    }
+
+    main {
+        padding: 12px;
+    }
+
+    section {
+        padding: 12px;
+    }
+
+    nav a {
+        display: inline-block;
+        margin: 5px;
+    }
+
+    #Grid {
+        font-size: 0.8rem;
+    }
+}
+
+/* Keeps the site logo visible and appropriately sized. */
+.site-logo {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+    display: block;
+    margin: 10px auto;
+}
+
+/* Styles the Chrysler 300C image. */
+.car-image {
+    width: 300px;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 15px auto;
+}
