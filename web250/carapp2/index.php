@@ -12,8 +12,16 @@
 session_start();
 require_once 'config_db.php';
 
-// Create a CSRF token for secure forms.
-if (empty($_SESSION['carapp2_csrf_token'])) {
+// Prevent browsers from reusing pages with outdated form tokens.
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+
+// Create a CSRF token if one does not already exist.
+if (
+    !isset($_SESSION['carapp2_csrf_token']) ||
+    !is_string($_SESSION['carapp2_csrf_token']) ||
+    $_SESSION['carapp2_csrf_token'] === ''
+) {
     $_SESSION['carapp2_csrf_token'] = bin2hex(random_bytes(32));
 }
 
@@ -35,18 +43,25 @@ function validDate($date) {
     }
 
     $parsed = DateTime::createFromFormat('Y-m-d', $date);
+
     return $parsed && $parsed->format('Y-m-d') === $date;
 }
 
 // Handle submitted forms.
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Verify the CSRF token.
+    // Verify the CSRF token against the current session.
     $submittedToken = $_POST['csrf_token'] ?? '';
+    $sessionToken = $_SESSION['carapp2_csrf_token'] ?? '';
 
-    if (!hash_equals($csrfToken, $submittedToken)) {
+    if (
+        !is_string($submittedToken) ||
+        !is_string($sessionToken) ||
+        $sessionToken === '' ||
+        !hash_equals($sessionToken, $submittedToken)
+    ) {
         http_response_code(403);
-        die('Invalid form submission. Please return to the inventory page.');
+        die('Invalid form submission. Please refresh the inventory page and try again.');
     }
 
     // Only logged-in users may change inventory.
@@ -57,7 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Delete a vehicle.
     if (isset($_POST['delete'])) {
-        $vin = trim($_POST['vin'] ?? '');
+
+        $vin = strtoupper(trim($_POST['vin'] ?? ''));
 
         if (strlen($vin) !== 17) {
             $message = 'Invalid VIN.';
@@ -91,42 +107,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $extColor = trim($_POST['EXT_COLOR'] ?? '');
         $intColor = trim($_POST['INT_COLOR'] ?? '');
 
-        $askingPrice = filter_var($_POST['ASKING_PRICE'] ?? null, FILTER_VALIDATE_FLOAT);
-        $salePrice = filter_var($_POST['SALE_PRICE'] ?? null, FILTER_VALIDATE_FLOAT);
-        $purchasePrice = filter_var($_POST['PURCHASE_PRICE'] ?? null, FILTER_VALIDATE_FLOAT);
+        $askingPrice = filter_var(
+            $_POST['ASKING_PRICE'] ?? null,
+            FILTER_VALIDATE_FLOAT
+        );
 
-        $mileage = filter_var($_POST['MILEAGE'] ?? null, FILTER_VALIDATE_INT);
+        $salePrice = filter_var(
+            $_POST['SALE_PRICE'] ?? null,
+            FILTER_VALIDATE_FLOAT
+        );
+
+        $purchasePrice = filter_var(
+            $_POST['PURCHASE_PRICE'] ?? null,
+            FILTER_VALIDATE_FLOAT
+        );
+
+        $mileage = filter_var(
+            $_POST['MILEAGE'] ?? null,
+            FILTER_VALIDATE_INT
+        );
+
         $transmission = trim($_POST['TRANSMISSION'] ?? '');
 
         $purchaseDate = trim($_POST['PURCHASE_DATE'] ?? '');
         $saleDate = trim($_POST['SALE_DATE'] ?? '');
 
-        // Validate required fields and values.
+        // Validate all submitted vehicle information.
         $valid =
             strlen($vin) === 17 &&
             $year !== false &&
+            $year !== null &&
             $year >= 1900 &&
             $year <= ((int)date('Y') + 2) &&
             $make !== '' &&
             $model !== '' &&
             $askingPrice !== false &&
+            $askingPrice !== null &&
             $askingPrice >= 0 &&
             $salePrice !== false &&
+            $salePrice !== null &&
             $salePrice >= 0 &&
             $purchasePrice !== false &&
+            $purchasePrice !== null &&
             $purchasePrice >= 0 &&
             $mileage !== false &&
+            $mileage !== null &&
             $mileage >= 0 &&
             validDate($purchaseDate) &&
             validDate($saleDate);
 
         if (!$valid) {
+
             $message = 'Please check all fields. VIN must contain 17 characters and numeric values must be valid.';
+
         } else {
 
             // Convert blank dates to SQL NULL.
-            $purchaseDateValue = $purchaseDate === '' ? null : $purchaseDate;
-            $saleDateValue = $saleDate === '' ? null : $saleDate;
+            $purchaseDateValue = $purchaseDate === ''
+                ? null
+                : $purchaseDate;
+
+            $saleDateValue = $saleDate === ''
+                ? null
+                : $saleDate;
 
             if ($originalVin !== '') {
 
@@ -210,6 +253,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Load a vehicle for editing.
 if ($isLoggedIn && isset($_GET['edit'])) {
+
     $editVin = trim($_GET['edit']);
 
     $stmt = $mysqli->prepare(
@@ -225,8 +269,9 @@ if ($isLoggedIn && isset($_GET['edit'])) {
     $stmt->close();
 }
 
-// Pagination settings.
+// Set pagination settings.
 $perPage = 10;
+
 $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
 
 if ($page === false || $page === null || $page < 1) {
@@ -239,6 +284,7 @@ $countResult = $mysqli->query(
 );
 
 $totalCars = (int)$countResult->fetch_assoc()['total'];
+
 $totalPages = max(1, (int)ceil($totalCars / $perPage));
 
 if ($page > $totalPages) {
@@ -259,8 +305,10 @@ $stmt->execute();
 
 $cars = $stmt->get_result();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -297,8 +345,10 @@ $cars = $stmt->get_result();
     <h2>Used Cars Inventory - Car AppB</h2>
 
     <?php if ($message !== ''): ?>
+
         <!-- The message class styles inventory feedback messages. -->
         <p class="message"><?= escapeValue($message) ?></p>
+
     <?php endif; ?>
 
     <?php
@@ -307,6 +357,7 @@ $cars = $stmt->get_result();
     ?>
 
     <?php if ($isLoggedIn): ?>
+
         <section>
             <h3>Account</h3>
 
@@ -320,9 +371,12 @@ $cars = $stmt->get_result();
             </p>
 
             <p>
-                <a href="scripts/setup.php">Reset and Rebuild Car AppB Database</a>
+                <a href="scripts/setup.php">
+                    Reset and Rebuild Car AppB Database
+                </a>
             </p>
         </section>
+
     <?php endif; ?>
 
     <?php
@@ -331,13 +385,15 @@ $cars = $stmt->get_result();
     ?>
 
     <section>
+
         <h3>Current Inventory</h3>
 
         <p>Total vehicles: <?= $totalCars ?></p>
 
-            <!-- This div is needed to wrap the wide inventory table so it can scroll horizontally on smaller screens. -->
-            <div class="table-wrapper">        
-        <!-- The Grid id identifies the inventory table for its CSS styling. -->
+        <!-- This div is needed to wrap the wide inventory table so it can scroll horizontally on smaller screens. -->
+        <div class="table-wrapper">
+
+            <!-- The Grid id identifies the inventory table for its CSS styling. -->
             <table id="Grid">
 
                 <thead>
@@ -364,6 +420,7 @@ $cars = $stmt->get_result();
                 </thead>
 
                 <tbody>
+
                     <?php if ($cars->num_rows > 0): ?>
 
                         <?php $rowNumber = 0; ?>
@@ -371,12 +428,16 @@ $cars = $stmt->get_result();
                         <?php while ($car = $cars->fetch_assoc()): ?>
 
                             <?php
-                            // Odd and even classes alternate the row appearance.
-                            $rowClass = ($rowNumber % 2 === 0) ? 'odd' : 'even';
+                            // Odd and even classes alternate row styling.
+                            $rowClass = ($rowNumber % 2 === 0)
+                                ? 'odd'
+                                : 'even';
+
                             $rowNumber++;
                             ?>
 
                             <tr class="<?= $rowClass ?>">
+
                                 <td><?= escapeValue($car['VIN']) ?></td>
                                 <td><?= escapeValue($car['YEAR']) ?></td>
                                 <td><?= escapeValue($car['Make']) ?></td>
@@ -384,15 +445,18 @@ $cars = $stmt->get_result();
                                 <td><?= escapeValue($car['TRIM']) ?></td>
                                 <td><?= escapeValue($car['EXT_COLOR']) ?></td>
                                 <td><?= escapeValue($car['INT_COLOR']) ?></td>
+
                                 <td>$<?= number_format((float)$car['ASKING_PRICE'], 2) ?></td>
                                 <td>$<?= number_format((float)$car['SALE_PRICE'], 2) ?></td>
                                 <td>$<?= number_format((float)$car['PURCHASE_PRICE'], 2) ?></td>
+
                                 <td><?= number_format((int)$car['MILEAGE']) ?></td>
                                 <td><?= escapeValue($car['TRANSMISSION']) ?></td>
                                 <td><?= escapeValue($car['PURCHASE_DATE']) ?></td>
                                 <td><?= escapeValue($car['SALE_DATE']) ?></td>
 
                                 <?php if ($isLoggedIn): ?>
+
                                     <td>
                                         <a href="?edit=<?= urlencode($car['VIN']) ?>">
                                             Edit
@@ -413,9 +477,12 @@ $cars = $stmt->get_result();
                                             <button type="submit" name="delete">
                                                 Delete
                                             </button>
+
                                         </form>
                                     </td>
+
                                 <?php endif; ?>
+
                             </tr>
 
                         <?php endwhile; ?>
@@ -429,11 +496,13 @@ $cars = $stmt->get_result();
                         </tr>
 
                     <?php endif; ?>
-                </tbody>
-         </table>
 
-        <!-- This div closes the responsive wrapper around the inventory table. -->
-    </div>
+                </tbody>
+
+            </table>
+
+            <!-- This div closes the responsive wrapper around the inventory table. -->
+        </div>
 
         <!-- The pagination class styles the links between inventory pages. -->
         <nav class="pagination" aria-label="Inventory pages">
@@ -441,8 +510,8 @@ $cars = $stmt->get_result();
             <?php if ($page > 1): ?>
                 <a href="?page=<?= $page - 1 ?>">Previous</a>
             <?php endif; ?>
-        <!-- This span keeps the current page number together on one line between pagination links. -->
 
+            <!-- This span keeps the current page number together between pagination links. -->
             <span>
                 Page <?= $page ?> of <?= $totalPages ?>
             </span>
@@ -452,6 +521,7 @@ $cars = $stmt->get_result();
             <?php endif; ?>
 
         </nav>
+
     </section>
 
 </main>
@@ -463,4 +533,5 @@ $mysqli->close();
 ?>
 
 <?php include 'components/footer.php'; ?>
-
+</body>
+</html>
