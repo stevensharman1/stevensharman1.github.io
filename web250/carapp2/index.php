@@ -24,12 +24,12 @@ unset($_SESSION['carapp2_message']);
 
 $editCar = null;
 
-// Safely display text from the database or user input.
+// Safely display text.
 function escapeValue($value) {
     return htmlspecialchars((string)($value ?? ''), ENT_QUOTES, 'UTF-8');
 }
 
-// Validate a date in YYYY-MM-DD format.
+// Validate dates.
 function validDate($date) {
     if ($date === null || $date === '') {
         return true;
@@ -46,13 +46,11 @@ function validDate($date) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
     (isset($_POST['save']) || isset($_POST['delete']))) {
 
-    // Only logged-in users can change inventory.
     if (!$isLoggedIn) {
         http_response_code(403);
         exit('You must log in to manage vehicles.');
     }
 
-    // Verify the CSRF token.
     if (
         !isset($_POST['csrf_token']) ||
         !hash_equals($csrfToken, $_POST['csrf_token'])
@@ -104,7 +102,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
         $purchaseDate = $purchaseDate === '' ? null : $purchaseDate;
         $saleDate = $saleDate === '' ? null : $saleDate;
 
-        // Validate the submitted vehicle information.
         $valid =
             strlen($vin) === 17 &&
             $year >= 1900 &&
@@ -122,6 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
                 'Please check the vehicle information. VIN must be 17 characters, and dates must use YYYY-MM-DD.';
         } else {
             if ($originalVIN !== '') {
+
                 // Update an existing vehicle.
                 $stmt = $mysqli->prepare(
                     "UPDATE carapp2_inventory SET
@@ -133,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
                 );
 
                 $stmt->bind_param(
-                    'sisssssdddissss',
+                    'sisssssdddisssss',
                     $vin,
                     $year,
                     $make,
@@ -152,7 +150,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
                 );
 
                 $successMessage = 'Vehicle updated successfully.';
+
             } else {
+
                 // Add a new vehicle.
                 $stmt = $mysqli->prepare(
                     "INSERT INTO carapp2_inventory (
@@ -199,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
     }
 }
 
-// Load a vehicle for editing, but only for logged-in users.
+// Load a vehicle for editing.
 if ($isLoggedIn && isset($_GET['edit'])) {
     $vinToEdit = trim($_GET['edit']);
 
@@ -230,7 +230,7 @@ $totalPages = max(1, (int)ceil($totalCars / $perPage));
 $page = min($page, $totalPages);
 $offset = ($page - 1) * $perPage;
 
-// Retrieve the current page of inventory.
+// Retrieve inventory.
 $stmt = $mysqli->prepare(
     "SELECT * FROM carapp2_inventory
      ORDER BY Make, Model
@@ -241,7 +241,6 @@ $stmt->bind_param('ii', $perPage, $offset);
 $stmt->execute();
 
 $result = $stmt->get_result();
-
 ?>
 
 <!DOCTYPE html>
@@ -262,6 +261,10 @@ $result = $stmt->get_result();
     <link rel="stylesheet" href="styles/default.css">
     <link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
 
+    <!-- Vicunadator Validator -->
+    <script src="https://divonbriesen.github.io/teaching/tools/standards-check.js"
+            defer></script>
+
     <!-- Accumulus Validator -->
     <script src="https://lint.page/kit/4d0fe3.js"
             crossorigin="anonymous"></script>
@@ -269,19 +272,7 @@ $result = $stmt->get_result();
 
 <body>
 
-<header>
-    <h1>Steven Sharman’s Sneaky Snake ✦ WEB250</h1>
-
-    <img src="../images/favicon.svg"
-         alt="Sneaky Snake logo"
-         class="site-logo">
-
-    <nav>
-        <a href="index.php">Car AppB Home</a> |
-        <a href="../carapp/index.php">Car AppA</a> |
-        <a href="../index.php">WEB250 Home</a>
-    </nav>
-</header>
+<?php include 'components/header.php'; ?>
 
 <main>
 
@@ -293,183 +284,9 @@ $result = $stmt->get_result();
         </p>
     <?php endif; ?>
 
-    <section>
-        <h3>Account</h3>
+    <?php include 'components/account.php'; ?>
 
-        <?php if ($isLoggedIn): ?>
-
-            <p>
-                You are logged in as
-                <strong><?= escapeValue($_SESSION['carapp2_username'] ?? 'User') ?></strong>.
-            </p>
-
-            <p>
-                <a href="scripts/logout.php">Log Out</a>
-            </p>
-
-            <p>
-                <a href="scripts/setup.php">
-                    Reset and Rebuild Car AppB Database
-                </a>
-            </p>
-
-        <?php else: ?>
-
-            <p>Visitors can view the inventory. Log in to manage vehicles.</p>
-
-            <form method="post" action="scripts/login.php">
-                <input type="hidden"
-                       name="csrf_token"
-                       value="<?= escapeValue($csrfToken) ?>">
-
-                <label for="username">Username:</label>
-                <input id="username"
-                       name="username"
-                       type="text"
-                       autocomplete="username"
-                       required>
-
-                <label for="password">Password:</label>
-                <input id="password"
-                       name="password"
-                       type="password"
-                       autocomplete="current-password"
-                       required>
-
-                <button type="submit" name="login">Log In</button>
-            </form>
-
-        <?php endif; ?>
-    </section>
-
-    <?php if ($isLoggedIn): ?>
-
-        <section>
-            <h3><?= $editCar ? 'Edit Vehicle' : 'Add a Vehicle' ?></h3>
-
-            <form method="post" action="index.php">
-
-                <input type="hidden"
-                       name="csrf_token"
-                       value="<?= escapeValue($csrfToken) ?>">
-
-                <input type="hidden"
-                       name="ORIGINAL_VIN"
-                       value="<?= escapeValue($editCar['VIN'] ?? '') ?>">
-
-                <label for="VIN">VIN:</label>
-                <input id="VIN"
-                       name="VIN"
-                       type="text"
-                       minlength="17"
-                       maxlength="17"
-                       required
-                       value="<?= escapeValue($editCar['VIN'] ?? '') ?>">
-
-                <label for="YEAR">Year:</label>
-                <input id="YEAR"
-                       name="YEAR"
-                       type="number"
-                       min="1900"
-                       required
-                       value="<?= escapeValue($editCar['YEAR'] ?? '') ?>">
-
-                <label for="Make">Make:</label>
-                <input id="Make"
-                       name="Make"
-                       type="text"
-                       required
-                       value="<?= escapeValue($editCar['Make'] ?? '') ?>">
-
-                <label for="Model">Model:</label>
-                <input id="Model"
-                       name="Model"
-                       type="text"
-                       required
-                       value="<?= escapeValue($editCar['Model'] ?? '') ?>">
-
-                <label for="TRIM">Trim:</label>
-                <input id="TRIM"
-                       name="TRIM"
-                       type="text"
-                       value="<?= escapeValue($editCar['TRIM'] ?? '') ?>">
-
-                <label for="EXT_COLOR">Exterior Color:</label>
-                <input id="EXT_COLOR"
-                       name="EXT_COLOR"
-                       type="text"
-                       value="<?= escapeValue($editCar['EXT_COLOR'] ?? '') ?>">
-
-                <label for="INT_COLOR">Interior Color:</label>
-                <input id="INT_COLOR"
-                       name="INT_COLOR"
-                       type="text"
-                       value="<?= escapeValue($editCar['INT_COLOR'] ?? '') ?>">
-
-                <label for="ASKING_PRICE">Asking Price:</label>
-                <input id="ASKING_PRICE"
-                       name="ASKING_PRICE"
-                       type="number"
-                       min="0"
-                       step="0.01"
-                       required
-                       value="<?= escapeValue($editCar['ASKING_PRICE'] ?? '0') ?>">
-
-                <label for="SALE_PRICE">Sale Price:</label>
-                <input id="SALE_PRICE"
-                       name="SALE_PRICE"
-                       type="number"
-                       min="0"
-                       step="0.01"
-                       value="<?= escapeValue($editCar['SALE_PRICE'] ?? '0') ?>">
-
-                <label for="PURCHASE_PRICE">Purchase Price:</label>
-                <input id="PURCHASE_PRICE"
-                       name="PURCHASE_PRICE"
-                       type="number"
-                       min="0"
-                       step="0.01"
-                       value="<?= escapeValue($editCar['PURCHASE_PRICE'] ?? '0') ?>">
-
-                <label for="MILEAGE">Mileage:</label>
-                <input id="MILEAGE"
-                       name="MILEAGE"
-                       type="number"
-                       min="0"
-                       value="<?= escapeValue($editCar['MILEAGE'] ?? '0') ?>">
-
-                <label for="TRANSMISSION">Transmission:</label>
-                <input id="TRANSMISSION"
-                       name="TRANSMISSION"
-                       type="text"
-                       value="<?= escapeValue($editCar['TRANSMISSION'] ?? '') ?>">
-
-                <label for="PURCHASE_DATE">Purchase Date:</label>
-                <input id="PURCHASE_DATE"
-                       name="PURCHASE_DATE"
-                       type="text"
-                       placeholder="YYYY-MM-DD"
-                       value="<?= escapeValue($editCar['PURCHASE_DATE'] ?? '') ?>">
-
-                <label for="SALE_DATE">Sale Date:</label>
-                <input id="SALE_DATE"
-                       name="SALE_DATE"
-                       type="text"
-                       placeholder="YYYY-MM-DD"
-                       value="<?= escapeValue($editCar['SALE_DATE'] ?? '') ?>">
-
-                <button type="submit" name="save">
-                    <?= $editCar ? 'Update Vehicle' : 'Add Vehicle' ?>
-                </button>
-
-                <?php if ($editCar): ?>
-                    <a href="index.php">Cancel Edit</a>
-                <?php endif; ?>
-
-            </form>
-        </section>
-
-    <?php endif; ?>
+    <?php include 'components/vehicle_form.php'; ?>
 
     <section>
         <h3>Current Inventory</h3>
@@ -595,33 +412,13 @@ $result = $stmt->get_result();
 
 </main>
 
-<footer>
-    <p><em>"Slow and steady in quality, fast in learning."</em></p>
-    <p>Page built by Steven Sharman's Sneaky Snake.</p>
-    <p>WEB250 Web Development - Car AppB</p>
-
-    <p>
-        <a href="https://validator.w3.org/check?uri=referer"
-           target="_blank"
-           rel="noopener">HTML Validator</a>
-        |
-        <a href="https://jigsaw.w3.org/css-validator/check/referer"
-           target="_blank"
-           rel="noopener">CSS Validator</a>
-    </p>
-</footer>
-
-<!-- Vicunadator Validator -->
-<script src="https://divonbriesen.github.io/teaching/tools/standards-check.js"
-        defer></script>
-
 <?php
+// Close the inventory query and database connection.
 $stmt->close();
 $mysqli->close();
 ?>
 
-</body>
-</html>
+<?php include 'components/footer.php'; ?>
 
 <?php
 $stmt->close();
