@@ -39,18 +39,26 @@ function validDate($date) {
         return false;
     }
 
-    return checkdate((int)$matches[2], (int)$matches[3], (int)$matches[1]);
+    return checkdate(
+        (int)$matches[2],
+        (int)$matches[3],
+        (int)$matches[1]
+    );
 }
 
 // Handle vehicle changes.
-if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
-    (isset($_POST['save']) || isset($_POST['delete']))) {
+if (
+    $_SERVER['REQUEST_METHOD'] === 'POST' &&
+    (isset($_POST['save']) || isset($_POST['delete']))
+) {
 
+    // Only logged-in users can change inventory.
     if (!$isLoggedIn) {
         http_response_code(403);
         exit('You must log in to manage vehicles.');
     }
 
+    // Verify the CSRF token.
     if (
         !isset($_POST['csrf_token']) ||
         !hash_equals($csrfToken, $_POST['csrf_token'])
@@ -102,6 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
         $purchaseDate = $purchaseDate === '' ? null : $purchaseDate;
         $saleDate = $saleDate === '' ? null : $saleDate;
 
+        // Validate the submitted vehicle information.
         $valid =
             strlen($vin) === 17 &&
             $year >= 1900 &&
@@ -118,6 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
             $_SESSION['carapp2_message'] =
                 'Please check the vehicle information. VIN must be 17 characters, and dates must use YYYY-MM-DD.';
         } else {
+
             if ($originalVIN !== '') {
 
                 // Update an existing vehicle.
@@ -164,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
                 );
 
                 $stmt->bind_param(
-                    'sisssssdddisss',
+                    'sisssssdddissss',
                     $vin,
                     $year,
                     $make,
@@ -230,7 +240,7 @@ $totalPages = max(1, (int)ceil($totalCars / $perPage));
 $page = min($page, $totalPages);
 $offset = ($page - 1) * $perPage;
 
-// Retrieve inventory.
+// Retrieve the current page of inventory.
 $stmt = $mysqli->prepare(
     "SELECT * FROM carapp2_inventory
      ORDER BY Make, Model
@@ -261,11 +271,7 @@ $result = $stmt->get_result();
     <link rel="stylesheet" href="styles/default.css">
     <link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
 
-    <!-- Vicunadator Validator -->
-    <script src="https://divonbriesen.github.io/teaching/tools/standards-check.js"
-            defer></script>
-
-    <!-- Accumulus Validator -->
+    <!-- Accumulus Validator: kept last in the head. -->
     <script src="https://lint.page/kit/4d0fe3.js"
             crossorigin="anonymous"></script>
 </head>
@@ -279,12 +285,38 @@ $result = $stmt->get_result();
     <h2>Used Cars Inventory - Car AppB</h2>
 
     <?php if ($message !== ''): ?>
+
+        <!-- The message class styles feedback after vehicle operations. -->
         <p class="message">
             <?= escapeValue($message) ?>
         </p>
+
     <?php endif; ?>
 
-    <?php include 'components/account.php'; ?>
+    <?php if ($isLoggedIn): ?>
+
+        <section>
+            <h3>Account</h3>
+
+            <p>
+                You are logged in as
+                <strong><?= escapeValue($_SESSION['carapp2_username'] ?? 'User') ?></strong>.
+            </p>
+
+            <p>
+                <a href="scripts/logout.php">Log Out</a>
+            </p>
+
+            <p>
+                <a href="scripts/setup.php">
+                    Reset and Rebuild Car AppB Database
+                </a>
+            </p>
+        </section>
+
+    <?php endif; ?>
+
+    <?php include 'components/login_form.php'; ?>
 
     <?php include 'components/vehicle_form.php'; ?>
 
@@ -299,10 +331,10 @@ $result = $stmt->get_result();
 
         <?php if ($totalCars > 0): ?>
 
-        <!-- The table-wrapper div allows the wide inventory table to scroll on smaller screens. -->
+            <!-- The table-wrapper div allows the wide table to scroll on smaller screens. -->
             <div class="table-wrapper">
 
-                  <!-- The Grid id identifies the inventory table for its existing CSS styling. -->
+                <!-- The Grid id identifies the inventory table for CSS styling. -->
                 <table id="Grid">
 
                     <thead>
@@ -334,7 +366,7 @@ $result = $stmt->get_result();
 
                         <?php while ($car = $result->fetch_assoc()): ?>
 
-                        <!-- The odd and even classes alternate row styling to make inventory easier to read. -->
+                            <!-- The odd and even classes alternate row colors for readability. -->
                             <tr class="<?= $rowNumber++ % 2 === 0 ? 'odd' : 'even' ?>">
 
                                 <td><?= escapeValue($car['VIN']) ?></td>
@@ -389,7 +421,7 @@ $result = $stmt->get_result();
                     </tbody>
 
                 </table>
-<!-- End of the responsive table-wrapper div. -->
+
             </div>
 
             <nav aria-label="Inventory pages">
@@ -411,6 +443,7 @@ $result = $stmt->get_result();
             <p>No vehicles are currently in the inventory.</p>
 
         <?php endif; ?>
+
     </section>
 
 </main>
@@ -422,8 +455,3 @@ $mysqli->close();
 ?>
 
 <?php include 'components/footer.php'; ?>
-
-<?php
-$stmt->close();
-$mysqli->close();
-?>
